@@ -30,9 +30,6 @@ public class LoanTypeConverter implements Converter{
         if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
             return null;
         }
-        System.out.println("value: " + value);
-        System.out.println("key: " + getKey(value) + ", facade: " + ejbFacade);
-        System.out.println("found: " + this.ejbFacade.find(getKey(value)));
         return this.ejbFacade.find(getKey(value));
     }
 

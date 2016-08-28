@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LoanAllocationGuidelines.findByMinimumAmount", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.minimumAmount = :minimumAmount"),
     @NamedQuery(name = "LoanAllocationGuidelines.findByMaximumTenure", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.maximumTenure = :maximumTenure"),
     @NamedQuery(name = "LoanAllocationGuidelines.findByMinimumTenure", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.minimumTenure = :minimumTenure"),
-    @NamedQuery(name = "LoanAllocationGuidelines.findByInterestRate", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.interestRate = :interestRate")})
+    @NamedQuery(name = "LoanAllocationGuidelines.findByInterestRate", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.interestRate = :interestRate"),
+    @NamedQuery(name = "LoanAllocationGuidelines.findIntRateByLoanType", query = "SELECT l FROM LoanAllocationGuidelines l WHERE l.loanType = :loanType")})
 public class LoanAllocationGuidelines implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,12 +56,12 @@ public class LoanAllocationGuidelines implements Serializable {
     private BigDecimal minimumAmount;
     @Size(max = 45)
     @Column(name = "maximum_tenure")
-    private String maximumTenure;
+    private int maximumTenure;
     @Size(max = 45)
     @Column(name = "minimum_tenure")
-    private String minimumTenure;
+    private int minimumTenure;
     @Column(name = "interest_rate")
-    private Integer interestRate;
+    private BigDecimal interestRate;
     @JoinColumn(name = "loan_type", referencedColumnName = "id")
     @ManyToOne
     private LoanType loanType;
@@ -104,27 +105,27 @@ public class LoanAllocationGuidelines implements Serializable {
         this.minimumAmount = minimumAmount;
     }
 
-    public String getMaximumTenure() {
+    public int getMaximumTenure() {
         return maximumTenure;
     }
 
-    public void setMaximumTenure(String maximumTenure) {
+    public void setMaximumTenure(int maximumTenure) {
         this.maximumTenure = maximumTenure;
     }
 
-    public String getMinimumTenure() {
+    public int getMinimumTenure() {
         return minimumTenure;
     }
 
-    public void setMinimumTenure(String minimumTenure) {
+    public void setMinimumTenure(int minimumTenure) {
         this.minimumTenure = minimumTenure;
     }
 
-    public Integer getInterestRate() {
+    public BigDecimal getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(Integer interestRate) {
+    public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -158,7 +159,9 @@ public class LoanAllocationGuidelines implements Serializable {
 
     @Override
     public String toString() {
-        return "com.corebits.ericsson.models.LoanAllocationGuidelines[ id=" + id + " ]";
+        return "LoanAllocationGuidelines{" + "id=" + id + ", loanName=" + loanName + ", maximumAmount=" + maximumAmount + ", minimumAmount=" + minimumAmount + ", maximumTenure=" + maximumTenure + ", minimumTenure=" + minimumTenure + ", interestRate=" + interestRate + ", loanType=" + loanType + '}';
     }
+
+   
     
 }

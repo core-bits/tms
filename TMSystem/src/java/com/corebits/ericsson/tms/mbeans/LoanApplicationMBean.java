@@ -45,46 +45,37 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private LoanType loanType;
     @ManagedProperty(value="#{loanTypeMBean}")
     private LoanTypeMBean loanTypeMBean;
+    @ManagedProperty(value="#{loanAllocationGuidelinesMBean}")
+    private LoanAllocationGuidelinesMBean loanAllocationGuidelinesMBean;
+    private Date startDateControl;
     
     
     public LoanApplicationMBean(){        
         super(LoanApplication.class);
         System.out.println("constructor");  
-        //System.out.println("ejbFacade: " + loanTypeMBean.ejbFacade.findWithNamedQuery("LoanType.findAll"));
     }
     
     @PostConstruct
     public void init(){
         super.setFacade(ejbFacade);
-        System.out.println(ejbFacade.findAll());
-        System.out.println("init");
-        loanTypeList = new ArrayList<>();
-        LoanType type = new LoanType();
-        type.setId(1);
-        type.setLoanName("Quick Cash Loan");
-        type.setLoanDescription("Quick Cash Loan");
-        loanTypeList.add(type);
-        type = new LoanType();
-        type.setId(2);
-        type.setLoanName("Regular Loan");
-        type.setLoanDescription("Regular Loan");
-        loanTypeList.add(type);
-        maxLoanAmount = new BigDecimal(10000000);
-        maxTenure = 24;
-        annualInterestRate = new BigDecimal(7.5);
+        loanTypeList = loanTypeMBean.getLoanTypeList();
+        maxLoanAmount = BigDecimal.ZERO;
+        maxTenure = 0;
+        startDateControl = new Date();
         payment = repaymentEntries();
     }
     
     public void onChangeLoanType(AjaxBehaviorEvent event){
-        
+        maxLoanAmount = loanType.getMaximumAmount();
+        maxTenure = loanType.getMaximumTenure();
     }
     
     public void tenureInputControl(AjaxBehaviorEvent event){
         System.out.println("tenureInputControl: numberOfPayment=" + numberOfPayment);
         if(maxTenure < numberOfPayment){
             this.numberOfPayment = maxTenure;
-            JsfUtil.addErrorMessage("Allowed maximum tenure for \"" + loanType + "\" is " + "\"" + maxTenure + "\"");
-            System.out.println("message: Allowed maximum tenure for \"" + loanType + "\" is " + "\"" + maxTenure + "\"");            
+            JsfUtil.addErrorMessage("Allowed maximum tenure for \"" + loanType.getLoanDescription() + "\" is " + "\"" + maxTenure + "\"");
+            System.out.println("message: Allowed maximum tenure for \"" + loanType .getLoanDescription()+ "\" is " + "\"" + maxTenure + "\"");            
         }
         payment = repaymentEntries();
     }
@@ -94,10 +85,8 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         if(maxLoanAmount != null && maxLoanAmount.compareTo(loanAmount) == -1){
             loanAmount = BigDecimal.ZERO;
             JsfUtil.addErrorMessage("Allowed maximum amount for \"" + loanType + "\" is " + "\"" + maxLoanAmount + "\"");
-            System.out.println("message: Allowed maximum amount for \"" + loanType + "\" is " + "\"" + maxLoanAmount + "\"");            
         }
         payment = repaymentEntries(); 
-        System.out.println("payments... : " + payment.getRepaymentEntry().size());
     }
     
     public void startDateInputControl(AjaxBehaviorEvent event){
@@ -107,6 +96,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     
     private PaymentDAO repaymentEntries(){
+        annualInterestRate = loanAllocationGuidelinesMBean.getLoanTypeInterestRate(loanType, loanAmount, numberOfPayment);
         System.out.println("repaymentEntries: loanAmount: " + loanAmount +", annualInterestRate: " + annualInterestRate + ", loanStartDate: "
                 + loanStartDate + ", numberOfPayment: " + numberOfPayment);
         if((loanAmount == null || loanAmount.compareTo(BigDecimal.ZERO) == 0) || 
@@ -152,16 +142,8 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
             mBeginningBal = mEndingBal;
         }
         
-//        try(BufferedWriter writer = Files.newBufferedWriter(Paths.get("D:/temp/payments.txt"))) {
-//                writer.write(builder.toString());
-//            } catch (IOException ex) {
-//                Logger.getLogger(LoanApplicationMBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-        
         totCostOfLoan = loanAmount.add(totInterest);
         PaymentDAO entries = new PaymentDAO(entryList, totInterest, totCostOfLoan); 
-        
-        System.out.println("payment: " + entries.getRepaymentEntry().size());
         
         return entries;
     }
@@ -273,8 +255,36 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         this.loanTypeMBean = loanTypeMBean;
     }
 
-    
-    
-    
+    public BigDecimal getMaxLoanAmount() {
+        return maxLoanAmount;
+    }
+
+    public void setMaxLoanAmount(BigDecimal maxLoanAmount) {
+        this.maxLoanAmount = maxLoanAmount;
+    }
+
+    public int getMaxTenure() {
+        return maxTenure;
+    }
+
+    public void setMaxTenure(int maxTenure) {
+        this.maxTenure = maxTenure;
+    }
+
+    public Date getStartDateControl() {
+        return startDateControl;
+    }
+
+    public void setStartDateControl(Date startDateControl) {
+        this.startDateControl = startDateControl;
+    }
+
+    public LoanAllocationGuidelinesMBean getLoanAllocationGuidelinesMBean() {
+        return loanAllocationGuidelinesMBean;
+    }
+
+    public void setLoanAllocationGuidelinesMBean(LoanAllocationGuidelinesMBean loanAllocationGuidelinesMBean) {
+        this.loanAllocationGuidelinesMBean = loanAllocationGuidelinesMBean;
+    }
     
 }

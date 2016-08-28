@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -33,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "LoanType.findById", query = "SELECT l FROM LoanType l WHERE l.id = :id"),
     @NamedQuery(name = "LoanType.findByLoanName", query = "SELECT l FROM LoanType l WHERE l.loanName = :loanName"),
     @NamedQuery(name = "LoanType.findByLoanDescription", query = "SELECT l FROM LoanType l WHERE l.loanDescription = :loanDescription")})
-public class LoanType implements Serializable {
+public class LoanType implements Serializable {    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,6 +45,15 @@ public class LoanType implements Serializable {
     @Size(max = 200)
     @Column(name = "loan_description")
     private String loanDescription;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "maximum_amount")
+    private BigDecimal maximumAmount;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "maximum_tenure")
+    private int maximumTenure;
     @OneToMany(mappedBy = "loanType")
     private List<LoanAllocationGuidelines> loanAllocationGuidelinesList;
 
@@ -113,6 +120,22 @@ public class LoanType implements Serializable {
     @Override
     public String toString() {
         return "com.corebits.ericsson.models.LoanType[ id=" + id + " ]";
+    }
+
+    public BigDecimal getMaximumAmount() {
+        return maximumAmount;
+    }
+
+    public void setMaximumAmount(BigDecimal maximumAmount) {
+        this.maximumAmount = maximumAmount;
+    }
+
+    public int getMaximumTenure() {
+        return maximumTenure;
+    }
+
+    public void setMaximumTenure(int maximumTenure) {
+        this.maximumTenure = maximumTenure;
     }
     
 }

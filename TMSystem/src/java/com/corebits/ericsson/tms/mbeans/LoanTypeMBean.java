@@ -3,6 +3,7 @@ package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.LoanTypeController;
 import com.corebits.ericsson.tms.models.LoanType;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -26,6 +27,10 @@ public class LoanTypeMBean extends AbstractMBean<LoanType> {
     @PostConstruct
     public void init(){
         super.setFacade(ejbFacade);
+    }
+    
+    public List<LoanType> getLoanTypeList(){        
+        return ejbFacade.findAll();
     }
     
     

@@ -20,6 +20,7 @@
         <div id="login-wrapper">
             <p:graphicImage name="images/login-logo.png" library="omega-layout" />
             <h:form>
+                <p:growl id="messages" showDetail="true" />
                 <div id="login-container">
                     <span class="title">TMS</span>
 
@@ -40,6 +41,7 @@
                         <div class="ui-g-12">
                             <p:commandButton action="#{authenticate.login()}" 
                                              value="Login" 
+                                             update="messages" 
                                              icon="fa fa-check" />
                         </div>
                     </div>

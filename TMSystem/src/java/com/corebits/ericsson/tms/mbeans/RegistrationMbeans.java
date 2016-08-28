@@ -15,9 +15,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
-import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
@@ -27,8 +27,8 @@ import org.primefaces.model.UploadedFile;
  *
  * @author Tommy
  */
-@Named(value = "register")
-@RequestScoped
+@ManagedBean(name = "register")
+@ViewScoped
 public class RegistrationMbeans implements Serializable {
 
     @Inject
@@ -59,9 +59,8 @@ public class RegistrationMbeans implements Serializable {
     String phoneOfNok;
     String addressOfNok;
     String referralName;
-    Date undertakingDate;
     String undertakingName;
-    String authorityToDeductAmount;
+    Double authorityToDeductAmount;
     Date authorityToDeductEffectiveDate;
     byte[] applicantSignature;
     Date applicationDate;
@@ -111,7 +110,7 @@ public class RegistrationMbeans implements Serializable {
             member.setReferralName(referralName);
             member.setRelationshipToNok(relationshipToNok);
             member.setSex(sex);
-            member.setUndertakingDate(undertakingDate);
+            member.setUndertakingDate(new Date());
             member.setUndertakingName(undertakingName);
             member.setWitnessName(witnessName);
             member.setWitnessResidentialAddress(witnessResidentialAddress);
@@ -136,8 +135,8 @@ public class RegistrationMbeans implements Serializable {
         return "pretty:newmembercont";
     }
 
-    public String createMemberCont() {
-        System.out.println("Continue create member button clicked");
+    public String witnessSignature(FileUploadEvent event) {
+        System.out.println("Continue create member, upload witness Signature");
         FacesMessage message;
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         try {
@@ -151,36 +150,17 @@ public class RegistrationMbeans implements Serializable {
         }
 
         try {
-            if (file != null) {
-                try {
-                    witnessSignature = file.getContents();
-                    member.setWitnessSignature(witnessSignature);
-                } catch (Exception e) {
-                    String format = String.format("Error retriving witness signature :%s", e.getMessage());
-                    System.out.println("message :" + format);
-                    message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return "pretty:newmembercont";
-                }
-                System.out.println("file name :" + file.getFileName());
-            } else {
-                System.out.println("witness signature is null");
+            try {
+                witnessSignature = event.getFile().getContents();
+                member.setWitnessSignature(witnessSignature);
+            } catch (Exception e) {
+                String format = String.format("Error retriving witness signature :%s", e.getMessage());
+                System.out.println("message :" + format);
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "pretty:newmembercont";
             }
-            if (applicantSig != null) {
-                try {
-                    applicantSignature = applicantSig.getContents();
-                    member.setApplicantSignature(applicantSignature);
-                } catch (Exception e) {
-                    String format = String.format("Error retriving applicant signature :%s", e.getMessage());
-                    System.out.println("message :" + format);
-                    message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return "pretty:newmembercont";
-                }
-                System.out.println("file name :" + file.getFileName());
-            } else {
-                System.out.println("application signature is null");
-            }
+            System.out.println("file name :" + event.getFile().getFileName());
             String response = rc.updateMember(member);
             if (response != null && response.equalsIgnoreCase(Utility.OPERATION_STATUS)) {
 //                Map map = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();
@@ -190,11 +170,56 @@ public class RegistrationMbeans implements Serializable {
             }
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "New Member", e.getMessage());
-            FacesContext.getCurrentInstance().addMessage("Alert", message);
-            return "pretty:newmembercont";
         }
         FacesContext.getCurrentInstance().addMessage("Alert", message);
-        return "pretty:createuser";
+        return "pretty:newmembercont";
+    }
+
+    public String applicantSignature(FileUploadEvent event) {
+        System.out.println("Continue create member, upload applicant Signature");
+        FacesMessage message;
+        Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        try {
+            Integer memId = (Integer) params.get("memberId");
+            member = rc.getMember(memId);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            String format = String.format("Error retriving member Id from session :%s", e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            return "pretty:newmembercont";
+        }
+
+        try {
+            try {
+                applicantSignature = event.getFile().getContents();
+                member.setApplicantSignature(applicantSignature);
+            } catch (Exception e) {
+                String format = String.format("Error retriving applicant signature :%s", e.getMessage());
+                System.out.println("message :" + format);
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "pretty:newmembercont";
+            }
+            System.out.println("file name :" + event.getFile().getFileName());
+
+            String response = rc.updateMember(member);
+            if (response != null && response.equalsIgnoreCase(Utility.OPERATION_STATUS)) {
+//                Map map = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "New Member", "Member profile successfully updated");
+            } else {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "New Member", "Could not update member profile");
+            }
+        } catch (Exception e) {
+            message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "New Member", e.getMessage());
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        return "pretty:newmembercont";
+    }
+
+    public String homePage() {
+        System.out.println("homePage button clicked");
+        return "pretty:home";
     }
 
     public Member1 getMember() {
@@ -381,14 +406,6 @@ public class RegistrationMbeans implements Serializable {
         this.referralName = referralName;
     }
 
-    public Date getUndertakingDate() {
-        return undertakingDate;
-    }
-
-    public void setUndertakingDate(Date undertakingDate) {
-        this.undertakingDate = undertakingDate;
-    }
-
     public String getUndertakingName() {
         return undertakingName;
     }
@@ -397,11 +414,11 @@ public class RegistrationMbeans implements Serializable {
         this.undertakingName = undertakingName;
     }
 
-    public String getAuthorityToDeductAmount() {
+    public Double getAuthorityToDeductAmount() {
         return authorityToDeductAmount;
     }
 
-    public void setAuthorityToDeductAmount(String authorityToDeductAmount) {
+    public void setAuthorityToDeductAmount(Double authorityToDeductAmount) {
         this.authorityToDeductAmount = authorityToDeductAmount;
     }
 

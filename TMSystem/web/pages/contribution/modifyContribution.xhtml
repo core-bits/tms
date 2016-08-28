@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <f:view>
+            <h:form id="indeform">                
+                <p:growl id="messages" showDetail="true" />
+                <h1><h:outputText value="New Request"/></h1>
+                <p:spacer height="5px"/>
+                <p:panel header="Increase/Decrease Contribution Form">
+                    <h:panelGrid columns="4" id="panelDetails">
+                        <h:outputLabel value="Member Name" style="font-weight:bold"/>
+                        <h:outputLabel id="memberName" value="#{modifycontri.memberDetails.memberName}" title="MemberName" />
+                        <h:outputLabel value="Phone Number" style="font-weight:bold" />
+                        <h:outputLabel id="memberNumber" value="#{modifycontri.memberDetails.mobileNumber}" title="Phone Number" />
+                        <h:outputLabel value="Member Id" style="font-weight:bold" />
+                        <h:outputLabel id="memberId" value="#{modifycontri.memberDetails.memberId}" title="Member Id" />
+                        <h:outputLabel value="" />
+                        <h:outputLabel value="" />
+                        <h:outputLabel value="Monthly Savings" style="font-weight:bold" />
+                        <h:outputLabel id="monthlySavings" 
+                                       value="#{modifycontri.memberDetails.authorityToDeductAmount}"
+                                       title="Monthly Savings" />
+                        <h:outputLabel value="New Amount" for="newAmount" style="font-weight:bold" />
+                        <p:inputNumber id="newAmount" value="#{modifycontri.newAmount}" 
+                                     title="New Increase/Decrease Amount" 
+                                     required="true"
+                                     requiredMessage="Please enter a valid new amount"/>
+                        <h:outputLabel value="Commencement Date:" for="commencementDate" style="font-weight:bold" />
+                        <p:calendar id="commencementDate" 
+                                    value="#{modifycontri.commencementDate}" 
+                                    title="Commencement Date" pattern="dd/MM/yyyy" 
+                                    required="true"
+                                    requiredMessage="Please select a valid commencement date">
+                        </p:calendar>
+                        <h:outputLabel value="Total Savings(MONTHLY)" for="totalSavings" style="font-weight:bold" />
+                        <p:inputNumber id="totalSavings" value="#{modifycontri.totalMonthlySavings}" 
+                                     title="Total Savings(MONTHLY)"
+                                     required="true"
+                                     requiredMessage="Please select a valid commencement date" />
+                        <h:outputLabel value="Action:" for="action" style="font-weight:bold" />
+                        <p:selectOneMenu id="action" value="#{modifycontri.action}" 
+                                         title="New Action">
+                            <p:ajax listener="#{modifycontri.newAction()}" update=":indeform:confirmation,:indeform:saveBtu" />
+                            <f:selectItem itemValue="" itemLabel="--Select One--"/>
+                            <f:selectItem itemValue="INCREASE" itemLabel="INCREASE"/>
+                            <f:selectItem itemValue="DECREASE" itemLabel="DECREASE"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>                    
+                </p:panel>
+                <p:panel id="confirmation" header="Authorization">
+                    I #{modifycontri.memberDetails.memberName} hereby authorize the #{modifycontri.displayAction} of my monthly contribution. 
+                    I agree to be a responsible member of the society. I promise to abide by the rules &amp; Regulations
+                    of the society, its constituted authority and Bye law.
+                </p:panel>                
+                <p:commandButton style="margin-top: 10px; width: 150px; height: 50px" 
+                                 id="saveBtu" disabled="#{!modifycontri.allowSubmit}" 
+                                 value="Save Request" 
+                                 update="messages" 
+                                 actionListener="#{modifycontri.modifyLoan()}"/>
+            </h:form>
+        </f:view>
+    </ui:define>
+
+</ui:composition>

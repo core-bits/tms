@@ -21,52 +21,69 @@
                 <h1><h:outputText value="New Member Form"/></h1>
                 <p:growl id="messages" showDetail="true" />
                 <p:spacer height="5px"/>
-                <p:panel header="Memeber Information">
+                <p:panel header="Member Information">
                     <h:panelGrid columns="4">
-                        <h:outputLabel value="Member Id:" for="memberId" />
-                        <p:inputText id="memberId" value="#{register.memberId}" title="MemberId" />
-                        <h:outputLabel value="Full Name:" for="memberName" />
-                        <p:inputText id="memberName" value="#{register.memberName}" title="MemberName" />
-                        <h:outputLabel value="Address:" for="memberAddress" />
-                        <p:inputText id="memberAddress" value="#{register.memberAddress}" title="MemberAddress" />
-                        <h:outputLabel value="Sex:" for="sex" />
+                        <h:outputLabel value="Member Id:" for="memberId" style="font-weight:bold" />
+                        <p:inputText id="memberId" value="#{register.memberId}" 
+                                     title="MemberId" required="true"
+                                     requiredMessage="Please enter a valid Member Id" />
+                        <h:outputLabel value="Full Name:" for="memberName" style="font-weight:bold" />
+                        <p:inputText id="memberName" value="#{register.memberName}" 
+                                     title="MemberName"  required="true"
+                                     requiredMessage="Please enter a valid Name" />
+                        <h:outputLabel value="Sex:" for="sex" style="font-weight:bold" />
                         <p:selectOneMenu id="sex" value="#{register.sex}" title="Sex" >
                             <f:selectItem itemValue="MALE" itemLabel="Male"/>
                             <f:selectItem itemValue="FEMALE" itemLabel="Female"/>
                         </p:selectOneMenu>
-                        <h:outputLabel value="Bank:" for="bank" />
+                        <h:outputLabel value="Bank:" for="bank" style="font-weight:bold" />
                         <p:selectOneMenu id="bank" value="#{register.bank}" title="Bank" >
                             <f:selectItems value="#{config.banks}" var="banks" 
                                            itemValue="#{banks.name}" 
                                            itemLabel="#{banks.name}"/>
                         </p:selectOneMenu>
-                        <h:outputLabel value="Account Number:" for="accountNumber" />
-                        <p:inputText id="accountNumber" value="#{register.accountNumber}" title="AccountNumber" />
-                        <h:outputLabel value="Mobile Number:" for="mobileNumber" />
-                        <p:inputText id="mobileNumber" value="#{register.mobileNumber}" title="MobileNumber" />
-                        <h:outputLabel value="Email:" for="email" />
-                        <p:inputText id="email" value="#{register.email}" title="Email" />
-                        <h:outputLabel value="Marital Status:" for="maritalStatus" />
-                        <p:inputText id="maritalStatus" value="#{register.maritalStatus}" title="MaritalStatus" />
-                        <h:outputLabel value="Buisness Unit:" for="buisnessUnit" />
+                        <h:outputLabel value="Account Number:" for="accountNumber" style="font-weight:bold" />
+                        <p:inputMask id="accountNumber" value="#{register.accountNumber}" 
+                                     title="AccountNumber"  required="true" mask="9999999999"
+                                     requiredMessage="Please enter a valid Account number" />
+
+                        <h:outputLabel value="Mobile Number:" for="mobileNumber" style="font-weight:bold" />
+                        <p:inputMask id="mobileNumber" value="#{register.mobileNumber}" 
+                                     title="MobileNumber"  required="true" mask="+2349999999999"
+                                     requiredMessage="Please enter a valid Mobile Number" />
+                        <h:outputLabel value="Email:" for="email" style="font-weight:bold" />
+                        <p:inputText id="email" value="#{register.email}" title="Email"  required="true"
+                                     requiredMessage="Please enter a valid email address" />
+                        <h:outputLabel value="Marital Status:" for="maritalStatus" style="font-weight:bold" />
+                        <p:selectOneMenu id="maritalStatus" value="#{register.maritalStatus}" title="MaritalStatus" >
+                            <f:selectItem itemValue="SINGLE" itemLabel="SINGLE"/>
+                            <f:selectItem itemValue="MARRIRED" itemLabel="MARRIED"/>
+                            <f:selectItem itemValue="DIVORCED" itemLabel="DIVORCED"/>
+                        </p:selectOneMenu>
+                        <h:outputLabel value="Buisness Unit:" for="buisnessUnit" style="font-weight:bold" />
                         <p:selectOneMenu id="buisnessUnit" value="#{register.unitId}" title="BuisnessUnit" >
                             <f:selectItems value="#{config.buisnessUnits}" var="unit" 
                                            itemValue="#{unit.id}" 
                                            itemLabel="#{unit.buisnessUnitName}"/>
                         </p:selectOneMenu>
-                        <h:outputLabel value="Department:" for="department" />
+                        <h:outputLabel value="Department:" for="department" style="font-weight:bold" />
                         <p:selectOneMenu id="department" value="#{register.departmentId}" title="Department" >
                             <f:selectItems value="#{config.departments}" var="depart" 
                                            itemValue="#{depart.id}" 
                                            itemLabel="#{depart.departmentName}"/>
                         </p:selectOneMenu>
+                        <h:outputLabel value="Address:" for="memberAddress" style="font-weight:bold" />
+                        <p:inputTextarea rows="4" cols="30"
+                                         id="memberAddress" value="#{register.memberAddress}" 
+                                         title="MemberAddress"  required="true"
+                                         requiredMessage="Member address should NOT be empty" />
                     </h:panelGrid>
                 </p:panel>
-                <p:panel header="Witness">
+                <p:panel header="Witness (OPTIONAL)">
                     <h:panelGrid columns="4">
-                        <h:outputLabel value="Witness Name:" for="witnessName" />
+                        <h:outputLabel value="Witness Name:" for="witnessName" style="font-weight:bold" />
                         <p:inputText id="witnessName" value="#{register.witnessName}" title="WitnessName" />
-                        <h:outputLabel value="Residential Address:" for="witnessResidentialAddress" />
+                        <h:outputLabel value="Residential Address:" for="witnessResidentialAddress" style="font-weight:bold" />
                         <p:inputTextarea id="witnessResidentialAddress" rows="4" cols="30"
                                          value="#{register.witnessResidentialAddress}" 
                                          title="WitnessResidentialAddress" />
@@ -74,43 +91,61 @@
                 </p:panel>
                 <p:panel header="Next Of Kin">
                     <h:panelGrid columns="4">
-                        <h:outputLabel value="Next Of Kin:" for="nextOfKin" />
-                        <p:inputText id="nextOfKin" value="#{register.nextOfKin}" title="NextOfKin" />
-                        <h:outputLabel value="Relationship To Nok:" for="relationshipToNok" />
-                        <p:inputText id="relationshipToNok" value="#{register.relationshipToNok}" title="RelationshipToNok" />
-                        <h:outputLabel value="Phone Of Nok:" for="phoneOfNok" />
-                        <p:inputText id="phoneOfNok" value="#{register.phoneOfNok}" title="PhoneOfNok" />
-                        <h:outputLabel value="Address Of Nok:" for="addressOfNok" />
-                        <p:inputText id="addressOfNok" value="#{register.addressOfNok}" title="AddressOfNok" />
+                        <h:outputLabel value="Next Of Kin:" for="nextOfKin" style="font-weight:bold" />
+                        <p:inputText id="nextOfKin" value="#{register.nextOfKin}" 
+                                     title="NextOfKin"  required="true"
+                                     requiredMessage="Next of kin name is required"/>
+                        <h:outputLabel value="Relationship To Nok:" for="relationshipToNok" style="font-weight:bold" />
+                        <p:inputText id="relationshipToNok" value="#{register.relationshipToNok}" 
+                                     title="RelationshipToNok"  required="true"
+                                     requiredMessage="Please enter a valid relationship to NOK" />
+                        <h:outputLabel value="Phone Of Nok:" for="phoneOfNok" style="font-weight:bold" />
+                        <p:inputMask id="phoneOfNok" value="#{register.phoneOfNok}" 
+                                     title="PhoneOfNok"  required="true" mask="+2349999999999" 
+                                     requiredMessage="Please enter phone number of NOK" />
+                        <h:outputLabel value="Address Of Nok:" for="addressOfNok" style="font-weight:bold" />
+                        <p:inputTextarea id="addressOfNok" value="#{register.addressOfNok}"
+                                     title="AddressOfNok"  required="true" rows="4" cols="30"
+                                     requiredMessage="Please enter the address of NOK"/>
                     </h:panelGrid>
                 </p:panel>
                 <p:panel header="Referral">
                     <h:panelGrid columns="4">
-                        <h:outputLabel value="Referral Name:" for="referralName" />
+                        <h:outputLabel value="Referral Name:" for="referralName" style="font-weight:bold" />
                         <p:inputText id="referralName" value="#{register.referralName}" title="ReferralName" />
                     </h:panelGrid>
                 </p:panel>
                 <p:panel header="Undertaking">
-                    <h:panelGrid columns="4">
-                        <h:outputLabel value="Undertaking Date:" for="undertakingDate" />
-                        <p:calendar id="undertakingDate" value="#{register.undertakingDate}" 
-                                    title="UndertakingDate" pattern="dd/MM/yyyy HH:mm:ss" >
-                        </p:calendar>
-                        <h:outputLabel value="Undertaking Name:" for="undertakingName" />
-                        <p:inputText id="undertakingName" value="#{register.undertakingName}" title="UndertakingName" />
-                        <h:outputLabel value="Authority To DeductAmount:" for="authorityToDeductAmount" />
-                        <p:inputText id="authorityToDeductAmount" value="#{register.authorityToDeductAmount}" title="AuthorityToDeductAmount" />
-                        <h:outputLabel value="Deduction Effective Date:" for="authorityToDeductEffectiveDate" />
-                        <p:calendar id="authorityToDeductEffectiveDate" 
+                    <div>
+                        I <p:inputText id="undertakingName" value="#{register.undertakingName}" 
+                                       title="UndertakingName"  required="true"
+                                       requiredMessage="Please enter a valid undertaking name"/> hereby solemnly agree to be a 
+                        I agree to be a responsible member of this society. I promise to abide by the rules &amp; Regulations
+                        of the society, its constituted authority and Bye law.
+                    </div>
+                </p:panel>
+                <p:panel header="Authorization To Deduct">  
+                    <div>
+                        I hereby authorize HR Compensation and Benefit to deduct from my salary at source one off
+                        registration fee of =N=5000.00 and monthly contribution of the sum of <br/>
+                        <p:inputNumber id="authorityToDeductAmount" value="#{register.authorityToDeductAmount}"
+                                       title="AuthorityToDeductAmount"  required="true"
+                                       requiredMessage="Please enter a valid amount for deduction" /> with effect from the month of 
+                        <p:calendar id="authorityToDeductEffectiveDate"
                                     value="#{register.authorityToDeductEffectiveDate}" 
-                                    title="Authority To Deduct EffectiveDate" pattern="dd/MM/yyyy" >
-                        </p:calendar>
-                    </h:panelGrid>
+                                    title="Authority To Deduct EffectiveDate" pattern="dd/MM/yyyy" required="true"
+                                    requiredMessage="Please enter a valid effective date of deduction. Use the Calender">
+                        </p:calendar> and to pay such deduction to the society each month.
+                    </div>
                 </p:panel>
                 <p:commandButton style="margin-top: 10px; width: 150px; height: 50px" 
                                  value="Sign Up" 
                                  update="messages" 
                                  action="#{register.createMember()}"/>
+                <p:commandButton style="margin-top: 10px; margin-left: 10px; width: 150px; height: 50px" 
+                                 value="Close"
+                                 update="messages" 
+                                 action="#{pretty.homePage()}"/>
             </h:form>
         </f:view>
     </ui:define>

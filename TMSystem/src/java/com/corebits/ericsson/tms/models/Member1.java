@@ -8,6 +8,7 @@ package com.corebits.ericsson.tms.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -103,9 +105,6 @@ public class Member1 implements Serializable {
     @Size(max = 200)
     @Column(name = "witness_residential_address")
     private String witnessResidentialAddress;
-    @Lob
-    @Column(name = "witness_signature")
-    private byte[] witnessSignature;
     @Column(name = "witness_approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date witnessApprovalDate;
@@ -136,34 +135,41 @@ public class Member1 implements Serializable {
     @Column(name = "authority_to_deduct_effective_date")
     @Temporal(TemporalType.DATE)
     private Date authorityToDeductEffectiveDate;
-    @Lob
-    @Column(name = "applicant_signature")
-    private byte[] applicantSignature;
     @Column(name = "application_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date applicationDate;
-    @Lob
-    @Column(name = "secretary_signature")
-    private byte[] secretarySignature;
     @Column(name = "secretary_approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date secretaryApprovalDate;
     @Column(name = "secretary_approval_status")
     private Short secretaryApprovalStatus;
-    @Lob
-    @Column(name = "president_signature")
-    private byte[] presidentSignature;
     @Column(name = "president_approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date presidentApprovalDate;
     @Column(name = "president_approval_status")
-    private Short presidentApprovalStatus;
+    private Short presidentApprovalStatus;    
+    @Lob
+    @Column(name = "witness_signature")
+    private byte[] witnessSignature;
+    @Lob
+    @Column(name = "applicant_signature")
+    private byte[] applicantSignature;
+    @Lob
+    @Column(name = "secretary_signature")
+    private byte[] secretarySignature;
+    @Lob
+    @Column(name = "president_signature")
+    private byte[] presidentSignature;
     @JoinColumn(name = "buisness_unit", referencedColumnName = "id")
     @ManyToOne
     private BuisnessUnit buisnessUnit;
     @JoinColumn(name = "department", referencedColumnName = "id")
     @ManyToOne
     private Department department;
+    @OneToMany(mappedBy = "memberId")
+    private List<ContributionModification> contributionModificationList;
+    @OneToMany(mappedBy = "memberId")
+    private List<User> userList;
 
     public Member1() {
     }
@@ -459,6 +465,22 @@ public class Member1 implements Serializable {
     @Override
     public String toString() {
         return "com.corebits.ericsson.models.Member1[ id=" + id + " ]";
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<ContributionModification> getContributionModificationList() {
+        return contributionModificationList;
+    }
+
+    public void setContributionModificationList(List<ContributionModification> contributionModificationList) {
+        this.contributionModificationList = contributionModificationList;
     }
     
 }

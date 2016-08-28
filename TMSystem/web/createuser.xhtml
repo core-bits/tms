@@ -26,9 +26,11 @@
                         <h:outputLabel value="Login Id:" for="loginId" />
                         <p:inputText id="loginId" value="#{authenticate.loginId}" title="MemberId" />
                         <h:outputLabel value="Password:" for="password" />
-                        <p:password id="password" value="#{authenticate.userpassword}" title="Password" />
+                        <p:password id="password" match="confirmPassword" 
+                                    value="#{authenticate.userpassword}" 
+                                    title="Password" />
                         <h:outputLabel value="Confirm Password:" for="confirmPassword" />
-                        <p:password id="confirmPassword" match="password" 
+                        <p:password id="confirmPassword" 
                                     value="#{authenticate.userpassword}" 
                                     title="confirmPassword" />                        
                     </h:panelGrid>

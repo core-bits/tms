@@ -44,4 +44,14 @@ public class AuthenticationController {
     }
     
     
+    public User getUser(String userId) {
+        String name = "User.findByUserLoginId";
+        User user = null;
+        try {
+            user = (User) em.createNamedQuery(name).setParameter("userLoginId", userId).getSingleResult();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "error retriving User : {0}, error : {1}", new Object[]{userId, e.getMessage()});
+        }
+        return user;
+    }
 }

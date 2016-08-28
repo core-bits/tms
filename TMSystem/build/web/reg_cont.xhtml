@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template1.xhtml">
+
+    <ui:define name="title">New Member Form</ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <h1><h:outputText value="Registration Cont."/></h1>
+            <p:growl id="messages" showDetail="true" />
+            <p:spacer height="5px"/>
+            <p:panel header="Witness">
+                <h:panelGrid columns="4">
+                    <h:outputLabel value="Witness Signature:" for="witnessSignature" />
+                    <p:fileUpload id="witnessSignature" 
+                                  fileUploadListener="#{register.witnessSignature}" 
+                                  mode="advanced" dragDropSupport="false"
+                                  update="messages" sizeLimit="100000" fileLimit="1" 
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+        <h:form>
+            <p:growl id="message" showDetail="true" />
+            <p:panel header="Undertaking">
+                <h:panelGrid columns="4">
+                    <h:outputLabel value="Applicant Signature:" for="applicantSignature" />
+                    <p:fileUpload id="applicantSignature" 
+                                  fileUploadListener="#{register.applicantSignature}" 
+                                  mode="advanced" dragDropSupport="false"
+                                  update="message" sizeLimit="100000" fileLimit="3" 
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />                         
+                </h:panelGrid>
+            </p:panel>
+            <h:panelGrid columns="1">                
+                <p:commandButton style="margin-top: 10px; width: 150px; height: 50px" 
+                                 value="Continue..." 
+                                 update="message" 
+                                 action="#{pretty.newuserPage()}"/>
+            </h:panelGrid>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

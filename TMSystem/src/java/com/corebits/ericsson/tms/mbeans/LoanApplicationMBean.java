@@ -18,6 +18,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -40,23 +41,42 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private PaymentDAO payment;
     private BigDecimal maxLoanAmount;
     private int maxTenure;
+    private List<LoanType> loanTypeList;
     private LoanType loanType;
+    @ManagedProperty(value="#{loanTypeMBean}")
+    private LoanTypeMBean loanTypeMBean;
     
     
     public LoanApplicationMBean(){        
         super(LoanApplication.class);
-        System.out.println("constructor");
-        
+        System.out.println("constructor");  
+        //System.out.println("ejbFacade: " + loanTypeMBean.ejbFacade.findWithNamedQuery("LoanType.findAll"));
     }
     
     @PostConstruct
     public void init(){
         super.setFacade(ejbFacade);
+        System.out.println(ejbFacade.findAll());
         System.out.println("init");
+        loanTypeList = new ArrayList<>();
+        LoanType type = new LoanType();
+        type.setId(1);
+        type.setLoanName("Quick Cash Loan");
+        type.setLoanDescription("Quick Cash Loan");
+        loanTypeList.add(type);
+        type = new LoanType();
+        type.setId(2);
+        type.setLoanName("Regular Loan");
+        type.setLoanDescription("Regular Loan");
+        loanTypeList.add(type);
         maxLoanAmount = new BigDecimal(10000000);
         maxTenure = 24;
         annualInterestRate = new BigDecimal(7.5);
         payment = repaymentEntries();
+    }
+    
+    public void onChangeLoanType(AjaxBehaviorEvent event){
+        
     }
     
     public void tenureInputControl(AjaxBehaviorEvent event){
@@ -71,7 +91,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     public void loanAmountInputControl(AjaxBehaviorEvent event){
         System.out.println("loanAmountInputControl: loanAmount=" + loanAmount);
-        if(maxLoanAmount != null && maxLoanAmount.compareTo(loanAmount) < 1){
+        if(maxLoanAmount != null && maxLoanAmount.compareTo(loanAmount) == -1){
             loanAmount = BigDecimal.ZERO;
             JsfUtil.addErrorMessage("Allowed maximum amount for \"" + loanType + "\" is " + "\"" + maxLoanAmount + "\"");
             System.out.println("message: Allowed maximum amount for \"" + loanType + "\" is " + "\"" + maxLoanAmount + "\"");            
@@ -229,6 +249,14 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         this.payment = payment;
     }
 
+    public List<LoanType> getLoanTypeList() {
+        return loanTypeList;
+    }
+
+    public void setLoanTypeList(List<LoanType> loanTypeList) {
+        this.loanTypeList = loanTypeList;
+    }
+
     public LoanType getLoanType() {
         return loanType;
     }
@@ -236,6 +264,16 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     public void setLoanType(LoanType loanType) {
         this.loanType = loanType;
     }
+
+    public LoanTypeMBean getLoanTypeMBean() {
+        return loanTypeMBean;
+    }
+
+    public void setLoanTypeMBean(LoanTypeMBean loanTypeMBean) {
+        this.loanTypeMBean = loanTypeMBean;
+    }
+
+    
     
     
     

@@ -5,15 +5,16 @@ import com.corebits.ericsson.tms.controllers.LoanTypeController;
 import com.corebits.ericsson.tms.models.LoanType;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author xtphere
  */
-@Named(value="loanTypMBean")
-@RequestScoped
+//
+@ManagedBean(name="loanTypeMBean")
+@ViewScoped
 public class LoanTypeMBean extends AbstractMBean<LoanType> {
     @EJB
     LoanTypeController ejbFacade;

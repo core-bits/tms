@@ -17,29 +17,24 @@
                             <p:messages showDetail="true" autoUpdate="true" closable="true"/>
                             <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank" style="border:0px none; background-color:transparent;">
                                 <p:outputLabel for="loanType" value="Loan Type"/>
-                                <p:selectOneMenu id="loanType">
+                                <p:selectOneMenu id="loanType" value="#{loanApplicationMBean.loanType}">
                                     <f:selectItem itemLabel="Select Loan Type" itemValue="" />
-                                    <f:selectItem itemLabel="Quick Cash" itemValue="Quick Cash" />
-                                    <f:selectItem itemLabel="Regular Loan" itemValue="Regular Loan" />
+                                    <f:selectItems var="type" value="#{loanApplicationMBean.loanTypeList}" itemLabel="#{type.loanName}" itemValue="#{type}" />
+                                    <p:ajax event="change" update="@form"/>
+                                    <f:converter converterId="loanTypeConverter"/>
                                 </p:selectOneMenu>
                                 <p:spacer/>
                                 
                                 <p:outputLabel for="loanAmount" value="Loan Amount"/>
-                                <p:outputPanel>
-                                    <p:inputText value="#{loanApplicationMBean.loanAmount}" id="loanAmount">
+                                <p:inputNumber readonly="#{empty loanApplicationMBean.loanType}" emptyValue="0" autocomplete="off" minValue="0" maxValue="10000000" value="#{loanApplicationMBean.loanAmount}" id="loanAmount">
                                         <p:ajax process="loanAmount" event="valueChange" listener="#{loanApplicationMBean.loanAmountInputControl}" update="@form"  /> 
-                                    </p:inputText>
-                                    <p:slider maxValue="10000000" for="loanAmount" />
-                                </p:outputPanel>
+                                </p:inputNumber>
                                 <p:message for="loanAmount" />
 
                                 <p:outputLabel for="noOfPayment" value="No of Payments"/>
-                                <p:outputPanel>
-                                    <p:inputText value="#{loanApplicationMBean.numberOfPayment}" id="noOfPayment">
+                                <p:inputNumber readonly="#{empty loanApplicationMBean.loanType}" emptyValue="0" autocomplete="off" minValue="0" maxValue="24" value="#{loanApplicationMBean.numberOfPayment}" id="noOfPayment">
                                         <p:ajax process="noOfPayment" event="valueChange" listener="#{loanApplicationMBean.tenureInputControl}" update="@form" /> 
-                                    </p:inputText>
-                                    <p:slider maxValue="24" for="noOfPayment" />
-                                </p:outputPanel> 
+                                </p:inputNumber>
                                 <p:message for="noOfPayment" />
 
                                 <p:outputLabel for="startDate" value="Start Date"/>
@@ -50,7 +45,7 @@
                                 
                                 <p:outputLabel rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" for="totalInterest" value="Total Interest"/>
                                 <p:inputText rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" value="#{loanApplicationMBean.payment.totalInterest}" readonly="true" id="totalInterest">
-                                    <f:convertNumber type="currency"  currencySymbol=""/>
+                                     <f:convertNumber type="currency"  currencySymbol=""/>
                                 </p:inputText>
                                 <p:spacer/>
                                 

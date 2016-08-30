@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
@@ -10,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,35 +32,37 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "member")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Member1.findAll", query = "SELECT m FROM Member1 m"),
-    @NamedQuery(name = "Member1.findById", query = "SELECT m FROM Member1 m WHERE m.id = :id"),
-    @NamedQuery(name = "Member1.findByMemberId", query = "SELECT m FROM Member1 m WHERE m.memberId = :memberId"),
-    @NamedQuery(name = "Member1.findByMemberName", query = "SELECT m FROM Member1 m WHERE m.memberName = :memberName"),
-    @NamedQuery(name = "Member1.findByMemberAddress", query = "SELECT m FROM Member1 m WHERE m.memberAddress = :memberAddress"),
-    @NamedQuery(name = "Member1.findBySex", query = "SELECT m FROM Member1 m WHERE m.sex = :sex"),
-    @NamedQuery(name = "Member1.findByBank", query = "SELECT m FROM Member1 m WHERE m.bank = :bank"),
-    @NamedQuery(name = "Member1.findByAccountNumber", query = "SELECT m FROM Member1 m WHERE m.accountNumber = :accountNumber"),
-    @NamedQuery(name = "Member1.findByMobileNumber", query = "SELECT m FROM Member1 m WHERE m.mobileNumber = :mobileNumber"),
-    @NamedQuery(name = "Member1.findByEmail", query = "SELECT m FROM Member1 m WHERE m.email = :email"),
-    @NamedQuery(name = "Member1.findByMaritalStatus", query = "SELECT m FROM Member1 m WHERE m.maritalStatus = :maritalStatus"),
-    @NamedQuery(name = "Member1.findByWitnessName", query = "SELECT m FROM Member1 m WHERE m.witnessName = :witnessName"),
-    @NamedQuery(name = "Member1.findByWitnessResidentialAddress", query = "SELECT m FROM Member1 m WHERE m.witnessResidentialAddress = :witnessResidentialAddress"),
-    @NamedQuery(name = "Member1.findByWitnessApprovalDate", query = "SELECT m FROM Member1 m WHERE m.witnessApprovalDate = :witnessApprovalDate"),
-    @NamedQuery(name = "Member1.findByNextOfKin", query = "SELECT m FROM Member1 m WHERE m.nextOfKin = :nextOfKin"),
-    @NamedQuery(name = "Member1.findByRelationshipToNok", query = "SELECT m FROM Member1 m WHERE m.relationshipToNok = :relationshipToNok"),
-    @NamedQuery(name = "Member1.findByPhoneOfNok", query = "SELECT m FROM Member1 m WHERE m.phoneOfNok = :phoneOfNok"),
-    @NamedQuery(name = "Member1.findByAddressOfNok", query = "SELECT m FROM Member1 m WHERE m.addressOfNok = :addressOfNok"),
-    @NamedQuery(name = "Member1.findByReferralName", query = "SELECT m FROM Member1 m WHERE m.referralName = :referralName"),
-    @NamedQuery(name = "Member1.findByUndertakingDate", query = "SELECT m FROM Member1 m WHERE m.undertakingDate = :undertakingDate"),
-    @NamedQuery(name = "Member1.findByUndertakingName", query = "SELECT m FROM Member1 m WHERE m.undertakingName = :undertakingName"),
-    @NamedQuery(name = "Member1.findByAuthorityToDeductAmount", query = "SELECT m FROM Member1 m WHERE m.authorityToDeductAmount = :authorityToDeductAmount"),
-    @NamedQuery(name = "Member1.findByAuthorityToDeductEffectiveDate", query = "SELECT m FROM Member1 m WHERE m.authorityToDeductEffectiveDate = :authorityToDeductEffectiveDate"),
-    @NamedQuery(name = "Member1.findByApplicationDate", query = "SELECT m FROM Member1 m WHERE m.applicationDate = :applicationDate"),
-    @NamedQuery(name = "Member1.findBySecretaryApprovalDate", query = "SELECT m FROM Member1 m WHERE m.secretaryApprovalDate = :secretaryApprovalDate"),
-    @NamedQuery(name = "Member1.findBySecretaryApprovalStatus", query = "SELECT m FROM Member1 m WHERE m.secretaryApprovalStatus = :secretaryApprovalStatus"),
-    @NamedQuery(name = "Member1.findByPresidentApprovalDate", query = "SELECT m FROM Member1 m WHERE m.presidentApprovalDate = :presidentApprovalDate"),
-    @NamedQuery(name = "Member1.findByPresidentApprovalStatus", query = "SELECT m FROM Member1 m WHERE m.presidentApprovalStatus = :presidentApprovalStatus")})
-public class Member1 implements Serializable {
+    @NamedQuery(name = "StaffMember.findAll", query = "SELECT m FROM StaffMember m"),
+    @NamedQuery(name = "StaffMember.findById", query = "SELECT m FROM StaffMember m WHERE m.id = :id"),
+    @NamedQuery(name = "StaffMember.findByMemberId", query = "SELECT m FROM StaffMember m WHERE m.memberId = :memberId"),
+    @NamedQuery(name = "StaffMember.findByMemberName", query = "SELECT m FROM StaffMember m WHERE m.memberName = :memberName"),
+    @NamedQuery(name = "StaffMember.findByMemberAddress", query = "SELECT m FROM StaffMember m WHERE m.memberAddress = :memberAddress"),
+    @NamedQuery(name = "StaffMember.findBySex", query = "SELECT m FROM StaffMember m WHERE m.sex = :sex"),
+    @NamedQuery(name = "StaffMember.findByBank", query = "SELECT m FROM StaffMember m WHERE m.bank = :bank"),
+    @NamedQuery(name = "StaffMember.findByAccountNumber", query = "SELECT m FROM StaffMember m WHERE m.accountNumber = :accountNumber"),
+    @NamedQuery(name = "StaffMember.findByMobileNumber", query = "SELECT m FROM StaffMember m WHERE m.mobileNumber = :mobileNumber"),
+    @NamedQuery(name = "StaffMember.findByEmail", query = "SELECT m FROM StaffMember m WHERE m.email = :email"),
+    @NamedQuery(name = "StaffMember.findByMaritalStatus", query = "SELECT m FROM StaffMember m WHERE m.maritalStatus = :maritalStatus"),
+    @NamedQuery(name = "StaffMember.findByWitnessName", query = "SELECT m FROM StaffMember m WHERE m.witnessName = :witnessName"),
+    @NamedQuery(name = "StaffMember.findByWitnessResidentialAddress", query = "SELECT m FROM StaffMember m WHERE m.witnessResidentialAddress = :witnessResidentialAddress"),
+    @NamedQuery(name = "StaffMember.findByWitnessApprovalDate", query = "SELECT m FROM StaffMember m WHERE m.witnessApprovalDate = :witnessApprovalDate"),
+    @NamedQuery(name = "StaffMember.findByNextOfKin", query = "SELECT m FROM StaffMember m WHERE m.nextOfKin = :nextOfKin"),
+    @NamedQuery(name = "StaffMember.findByRelationshipToNok", query = "SELECT m FROM StaffMember m WHERE m.relationshipToNok = :relationshipToNok"),
+    @NamedQuery(name = "StaffMember.findByPhoneOfNok", query = "SELECT m FROM StaffMember m WHERE m.phoneOfNok = :phoneOfNok"),
+    @NamedQuery(name = "StaffMember.findByAddressOfNok", query = "SELECT m FROM StaffMember m WHERE m.addressOfNok = :addressOfNok"),
+    @NamedQuery(name = "StaffMember.findByReferralName", query = "SELECT m FROM StaffMember m WHERE m.referralName = :referralName"),
+    @NamedQuery(name = "StaffMember.findByUndertakingDate", query = "SELECT m FROM StaffMember m WHERE m.undertakingDate = :undertakingDate"),
+    @NamedQuery(name = "StaffMember.findByUndertakingName", query = "SELECT m FROM StaffMember m WHERE m.undertakingName = :undertakingName"),
+    @NamedQuery(name = "StaffMember.findByAuthorityToDeductAmount", query = "SELECT m FROM StaffMember m WHERE m.authorityToDeductAmount = :authorityToDeductAmount"),
+    @NamedQuery(name = "StaffMember.findByAuthorityToDeductEffectiveDate", query = "SELECT m FROM StaffMember m WHERE m.authorityToDeductEffectiveDate = :authorityToDeductEffectiveDate"),
+    @NamedQuery(name = "StaffMember.findByApplicationDate", query = "SELECT m FROM StaffMember m WHERE m.applicationDate = :applicationDate"),
+    @NamedQuery(name = "StaffMember.findBySecretaryApprovalDate", query = "SELECT m FROM StaffMember m WHERE m.secretaryApprovalDate = :secretaryApprovalDate"),
+    @NamedQuery(name = "StaffMember.findBySecretaryApprovalStatus", query = "SELECT m FROM StaffMember m WHERE m.secretaryApprovalStatus = :secretaryApprovalStatus"),
+    @NamedQuery(name = "StaffMember.findByPresidentApprovalDate", query = "SELECT m FROM StaffMember m WHERE m.presidentApprovalDate = :presidentApprovalDate"),
+    @NamedQuery(name = "StaffMember.findByPresidentApprovalStatus", query = "SELECT m FROM StaffMember m WHERE m.presidentApprovalStatus = :presidentApprovalStatus")})
+public class StaffMember implements Serializable {
+
+    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -146,7 +145,7 @@ public class Member1 implements Serializable {
     @Column(name = "president_approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date presidentApprovalDate;
-    @Column(name = "president_approval_status")
+    @Column(name = "president_approval_status")    
     private Short presidentApprovalStatus;    
     @Lob
     @Column(name = "witness_signature")
@@ -160,6 +159,8 @@ public class Member1 implements Serializable {
     @Lob
     @Column(name = "president_signature")
     private byte[] presidentSignature;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "memberId")
+    private List<LoanApplication> loanApplicationList;
     @JoinColumn(name = "buisness_unit", referencedColumnName = "id")
     @ManyToOne
     private BuisnessUnit buisnessUnit;
@@ -171,10 +172,10 @@ public class Member1 implements Serializable {
     @OneToMany(mappedBy = "memberId")
     private List<User> userList;
 
-    public Member1() {
+    public StaffMember() {
     }
 
-    public Member1(Integer id) {
+    public StaffMember(Integer id) {
         this.id = id;
     }
 
@@ -452,10 +453,10 @@ public class Member1 implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Member1)) {
+        if (!(object instanceof StaffMember)) {
             return false;
         }
-        Member1 other = (Member1) object;
+        StaffMember other = (StaffMember) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -464,7 +465,7 @@ public class Member1 implements Serializable {
 
     @Override
     public String toString() {
-        return "com.corebits.ericsson.models.Member1[ id=" + id + " ]";
+        return "com.corebits.ericsson.models.StaffMember[ id=" + id + " ]";
     }
 
     public List<User> getUserList() {
@@ -481,6 +482,14 @@ public class Member1 implements Serializable {
 
     public void setContributionModificationList(List<ContributionModification> contributionModificationList) {
         this.contributionModificationList = contributionModificationList;
+    }    
+
+    public List<LoanApplication> getLoanApplicationList() {
+        return loanApplicationList;
+    }
+
+    public void setLoanApplicationList(List<LoanApplication> loanApplicationList) {
+        this.loanApplicationList = loanApplicationList;
     }
     
 }

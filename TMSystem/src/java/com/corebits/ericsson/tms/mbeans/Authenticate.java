@@ -2,7 +2,7 @@ package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.AuthenticationController;
 import com.corebits.ericsson.tms.controllers.RegistrationController;
-import com.corebits.ericsson.tms.models.Member1;
+import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.models.User;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,7 +42,7 @@ public class Authenticate implements Serializable {
         FacesMessage message;
         User u = new User();
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        Member1 member;
+        StaffMember member;
         try {
             Integer memId = (Integer) params.get("memberId");
             member = rc.getMember(memId);

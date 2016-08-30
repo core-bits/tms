@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.controllers;
 
-import com.corebits.ericsson.tms.models.Member1;
+
+import com.corebits.ericsson.tms.models.StaffMember;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,9 +27,9 @@ public class MemberController {
         em.persist(object);
     }
 
-    public List<Member1> getMembers() {
+    public List<StaffMember> getMembers() {
         String name = "Member1.findAll";
-        List<Member1> members = new ArrayList<>();
+        List<StaffMember> members = new ArrayList<>();
         try {
             members = em.createNamedQuery(name).getResultList();
         } catch (Exception e) {

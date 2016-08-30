@@ -1,21 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.AuthenticationController;
 import com.corebits.ericsson.tms.controllers.ModificationController;
 import com.corebits.ericsson.tms.models.ContributionModification;
-import com.corebits.ericsson.tms.models.Member1;
+import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.models.User;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -41,7 +36,7 @@ public class ContributionModificationMbean implements Serializable {
     private String totalMonthlySavings;
     private boolean allowSubmit;
 
-    Member1 member;
+    StaffMember member;
 
     public ContributionModificationMbean() {
     }
@@ -51,7 +46,7 @@ public class ContributionModificationMbean implements Serializable {
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         try {
             String userId = (String) params.get("loginId");
-            Member1 user = ac.getUser(userId).getMemberId();
+            StaffMember user = ac.getUser(userId).getMemberId();
             if (user != null) {
                 ContributionModification lm = new ContributionModification();
                 lm.setApplicationDate(new Date());
@@ -74,10 +69,10 @@ public class ContributionModificationMbean implements Serializable {
         }
     }
 
-    public Member1 getMemberDetails() {
+    public StaffMember getMemberDetails() {
         FacesMessage message;
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        Member1 user;
+        StaffMember user;
         try {
             String userId = (String) params.get("loginId");
 //            System.out.println("LoginId in getMemberDetails :" + userId);
@@ -140,11 +135,11 @@ public class ContributionModificationMbean implements Serializable {
         this.totalMonthlySavings = totalMonthlySavings;
     }
 
-    public Member1 getMember() {
+    public StaffMember getMember() {
         return member;
     }
 
-    public void setMember(Member1 member) {
+    public void setMember(StaffMember member) {
         this.member = member;
     }
 

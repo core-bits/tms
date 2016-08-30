@@ -8,6 +8,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -40,17 +42,15 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "LoanApplication.findByDateOfApproval", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApproval = :dateOfApproval")})
 public class LoanApplication implements Serializable {
 
+    
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "member_id")
-    private String memberId;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "loan_period_in_years")
@@ -99,7 +99,10 @@ public class LoanApplication implements Serializable {
     private String approvedBy;
     @Column(name = "date_of_approval")
     @Temporal(TemporalType.DATE)
-    private Date dateOfApproval;
+    private Date dateOfApproval;    
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
+    @ManyToOne(optional = false)
+    private StaffMember memberId;
 
     public LoanApplication() {
     }
@@ -108,7 +111,7 @@ public class LoanApplication implements Serializable {
         this.id = id;
     }
 
-    public LoanApplication(Integer id, String memberId, int loanPeriodInYears, BigDecimal loanAmount, int annualInterestRate, Date loanStartDate, BigDecimal monthlyPaymentAmount, int numberOfPayment, BigDecimal totalInterest, BigDecimal totalCostOfLoan, BigDecimal monthlyPrincipal, Date dateOfApplication) {
+    public LoanApplication(Integer id, StaffMember memberId, int loanPeriodInYears, BigDecimal loanAmount, int annualInterestRate, Date loanStartDate, BigDecimal monthlyPaymentAmount, int numberOfPayment, BigDecimal totalInterest, BigDecimal totalCostOfLoan, BigDecimal monthlyPrincipal, Date dateOfApplication) {
         this.id = id;
         this.memberId = memberId;
         this.loanPeriodInYears = loanPeriodInYears;
@@ -131,13 +134,7 @@ public class LoanApplication implements Serializable {
         this.id = id;
     }
 
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
+    
 
     public int getLoanPeriodInYears() {
         return loanPeriodInYears;
@@ -264,6 +261,14 @@ public class LoanApplication implements Serializable {
                 + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", monthlyPrincipal=" 
                 + monthlyPrincipal + ", dateOfApplication=" + dateOfApplication + ", approvedBy=" 
                 + approvedBy + ", dateOfApproval=" + dateOfApproval + '}';
+    }
+
+    public StaffMember getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(StaffMember memberId) {
+        this.memberId = memberId;
     }
     
     

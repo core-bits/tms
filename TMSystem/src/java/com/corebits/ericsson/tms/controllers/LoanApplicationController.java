@@ -1,6 +1,7 @@
 
 package com.corebits.ericsson.tms.controllers;
 
+import com.corebits.ericsson.tms.dao.PaymentDAO;
 import com.corebits.ericsson.tms.models.LoanApplication;
 import com.corebits.ericsson.tms.utils.Utility;
 import javax.ejb.Stateless;
@@ -24,5 +25,9 @@ public class LoanApplicationController extends AbstractController<LoanApplicatio
     
     public LoanApplicationController() {
         super(LoanApplication.class);
+    }
+    
+    public void apply(PaymentDAO payment, String memberId){
+        
     }
 }

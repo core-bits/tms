@@ -23,7 +23,7 @@ public abstract class LoanApplication_ {
 	public static volatile SingularAttribute<LoanApplication, Integer> id;
 	public static volatile SingularAttribute<LoanApplication, BigDecimal> monthlyPaymentAmount;
 	public static volatile SingularAttribute<LoanApplication, BigDecimal> totalInterest;
-	public static volatile SingularAttribute<LoanApplication, String> memberId;
+	public static volatile SingularAttribute<LoanApplication, StaffMember> memberId;
 
 }
 

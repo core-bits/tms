@@ -20,6 +20,7 @@ public abstract class User_ {
 	public static volatile SingularAttribute<User, Date> lastLoginDate;
 	public static volatile SingularAttribute<User, String> userName;
 	public static volatile ListAttribute<User, UserRole> userRoleList;
+	public static volatile SingularAttribute<User, StaffMember> memberId;
 
 }
 

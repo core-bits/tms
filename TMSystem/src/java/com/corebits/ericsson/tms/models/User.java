@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
@@ -77,7 +73,7 @@ public class User implements Serializable {
 
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     @ManyToOne
-    private Member1 memberId;
+    private StaffMember memberId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<UserRole> userRoleList;
@@ -194,11 +190,11 @@ public class User implements Serializable {
         this.userRoleList = userRoleList;
     }
 
-    public Member1 getMemberId() {
+    public StaffMember getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(Member1 memberId) {
+    public void setMemberId(StaffMember memberId) {
         this.memberId = memberId;
     }
 

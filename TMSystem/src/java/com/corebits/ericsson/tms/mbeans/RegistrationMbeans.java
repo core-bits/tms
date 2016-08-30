@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.ConfigurationController;
 import com.corebits.ericsson.tms.controllers.RegistrationController;
 import com.corebits.ericsson.tms.models.BuisnessUnit;
 import com.corebits.ericsson.tms.models.Department;
-import com.corebits.ericsson.tms.models.Member1;
+import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.utils.Utility;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -36,7 +32,7 @@ public class RegistrationMbeans implements Serializable {
     @Inject
     ConfigurationController cc;
 
-    Member1 member;
+    StaffMember member;
     private UploadedFile file;
     private UploadedFile applicantSig;
     String unitId;
@@ -75,7 +71,7 @@ public class RegistrationMbeans implements Serializable {
     }
 
     public String createMember() {
-        member = new Member1();
+        member = new StaffMember();
         System.out.println("Create member button clicked");
         FacesMessage message;
         try {
@@ -222,7 +218,7 @@ public class RegistrationMbeans implements Serializable {
         return "pretty:home";
     }
 
-    public Member1 getMember() {
+    public StaffMember getMember() {
         return member;
     }
 
@@ -242,7 +238,7 @@ public class RegistrationMbeans implements Serializable {
         this.applicantSig = applicantSig;
     }
 
-    public void setMember(Member1 member) {
+    public void setMember(StaffMember member) {
         this.member = member;
     }
 

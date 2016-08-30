@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.controllers;
 
-import com.corebits.ericsson.tms.models.Member1;
+
+import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.utils.Utility;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +26,7 @@ public class RegistrationController {
         em.persist(object);
     }
 
-    public String createMember(Member1 member1) {
+    public String createMember(StaffMember member1) {
         String status;
         try {
             em.persist(member1);
@@ -41,7 +38,7 @@ public class RegistrationController {
         return status;
     }
 
-    public String updateMember(Member1 member1) {
+    public String updateMember(StaffMember member1) {
         String status;
         try {
             em.merge(member1);
@@ -53,10 +50,10 @@ public class RegistrationController {
         return status;
     }
 
-    public Member1 getMember(Integer memberId) {
-        Member1 member1 = new Member1();
+    public StaffMember getMember(Integer memberId) {
+        StaffMember member1 = new StaffMember();
         try {
-            member1 = (Member1) em.find(Member1.class, memberId);
+            member1 = (StaffMember) em.find(StaffMember.class, memberId);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Exception getting member for Id {0}, message :{1}", new Object[]{memberId, e.getMessage()});
         }

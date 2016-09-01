@@ -12,12 +12,11 @@
             }
         </style>
     </ui:define>
-
+    <ui:define name="title">Modify Monthly Contribution</ui:define>
     <ui:define name="content">
         <f:view>
             <h:form id="indeform">                
                 <p:growl id="messages" showDetail="true" />
-                <h1><h:outputText value="New Request"/></h1>
                 <p:spacer height="5px"/>
                 <p:panel header="Increase/Decrease Contribution Form">
                     <h:panelGrid columns="4" id="panelDetails">
@@ -35,9 +34,9 @@
                                        title="Monthly Savings" />
                         <h:outputLabel value="New Amount" for="newAmount" style="font-weight:bold" />
                         <p:inputNumber id="newAmount" value="#{modifycontri.newAmount}" 
-                                     title="New Increase/Decrease Amount" 
-                                     required="true"
-                                     requiredMessage="Please enter a valid new amount"/>
+                                       title="New Increase/Decrease Amount" 
+                                       required="true"
+                                       requiredMessage="Please enter a valid new amount"/>
                         <h:outputLabel value="Commencement Date:" for="commencementDate" style="font-weight:bold" />
                         <p:calendar id="commencementDate" 
                                     value="#{modifycontri.commencementDate}" 
@@ -47,9 +46,9 @@
                         </p:calendar>
                         <h:outputLabel value="Total Savings(MONTHLY)" for="totalSavings" style="font-weight:bold" />
                         <p:inputNumber id="totalSavings" value="#{modifycontri.totalMonthlySavings}" 
-                                     title="Total Savings(MONTHLY)"
-                                     required="true"
-                                     requiredMessage="Please select a valid commencement date" />
+                                       title="Total Savings(MONTHLY)"
+                                       required="true"
+                                       requiredMessage="Please select a valid commencement date" />
                         <h:outputLabel value="Action:" for="action" style="font-weight:bold" />
                         <p:selectOneMenu id="action" value="#{modifycontri.action}" 
                                          title="New Action">
@@ -64,7 +63,7 @@
                     I #{modifycontri.memberDetails.memberName} hereby authorize the #{modifycontri.displayAction} of my monthly contribution. 
                     I agree to be a responsible member of the society. I promise to abide by the rules &amp; Regulations
                     of the society, its constituted authority and Bye law.
-                </p:panel>                
+                </p:panel>  
                 <p:commandButton style="margin-top: 10px; width: 150px; height: 50px" 
                                  id="saveBtu" disabled="#{!modifycontri.allowSubmit}" 
                                  value="Save Request" 

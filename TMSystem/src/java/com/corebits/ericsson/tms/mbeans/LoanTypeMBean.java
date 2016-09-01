@@ -19,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 public class LoanTypeMBean extends AbstractMBean<LoanType> {
     @EJB
     LoanTypeController ejbFacade;
+    private LoanType loanType;
     
     public LoanTypeMBean(){
         super(LoanType.class);
@@ -31,6 +32,22 @@ public class LoanTypeMBean extends AbstractMBean<LoanType> {
     
     public List<LoanType> getLoanTypeList(){        
         return ejbFacade.findAll();
+    }
+    
+    public void createNewLoanType(){
+        ejbFacade.create(loanType);
+    }
+    
+    public void updateLoanType(){
+        ejbFacade.edit(loanType);
+    }
+
+    public LoanType getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(LoanType loanType) {
+        this.loanType = loanType;
     }
     
     

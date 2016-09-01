@@ -45,7 +45,15 @@
     <url-mapping id="createuser">
         <pattern value="/createuser/" />
         <view-id value="/faces/createuser.xhtml"/>
-    </url-mapping>    
+    </url-mapping> 
+    <url-mapping id="loan-application-feedback">
+        <pattern value="/loan-application-feedback/" />
+        <view-id value="/faces/loan-application-list.xhtml"/>
+    </url-mapping>
+     <url-mapping id="loan-application-list">
+        <pattern value="/loan-application-list/" />
+        <view-id value="/faces/loan-application-list.xhtml"/>
+    </url-mapping>   
     <url-mapping id="members">
         <pattern value="/members/" />
         <view-id value="/faces/pages/member/members.xhtml"/>

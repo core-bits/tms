@@ -79,6 +79,7 @@ public class Authenticate implements Serializable {
         System.out.println("User :" + userName + ", Password :" + password);
         FacesMessage message;
         User login = ac.login(userName, password);
+        System.out.println("login: " + login);
         if (login != null) {
             Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             params.put("loginId", userName);

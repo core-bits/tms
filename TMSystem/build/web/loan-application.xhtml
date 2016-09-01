@@ -58,7 +58,7 @@
                                 <p:spacer/>
                                 
                                 <p:spacer rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}"/>
-                                <p:commandButton rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" action="#{pretty.registrationPage()}" value="Apply"></p:commandButton>
+                                <p:commandButton rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" action="#{loanApplicationMBean.apply()}" value="Apply"></p:commandButton>
                                 <p:spacer/>
                             </p:panelGrid>                            
                         </div>

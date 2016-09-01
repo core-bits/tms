@@ -2,11 +2,13 @@
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.LoanApplicationController;
+import com.corebits.ericsson.tms.controllers.RegistrationController;
 import com.corebits.ericsson.tms.dao.PaymentDAO;
 import com.corebits.ericsson.tms.dao.RepaymentEntryDAO;
 import com.corebits.ericsson.tms.mbeans.util.JsfUtil;
 import com.corebits.ericsson.tms.models.LoanApplication;
 import com.corebits.ericsson.tms.models.LoanType;
+import com.corebits.ericsson.tms.models.StaffMember;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -14,12 +16,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 /**
@@ -32,7 +37,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 @ViewScoped
 public class LoanApplicationMBean extends AbstractMBean<LoanApplication> implements Serializable{    
     @EJB
-    LoanApplicationController ejbFacade;
+    LoanApplicationController loanApplicationFacade;
+    @EJB
+    RegistrationController registrationFacade;
     private int loanPeriodInYears;
     private BigDecimal loanAmount;
     private BigDecimal annualInterestRate;
@@ -57,7 +64,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     @PostConstruct
     public void init(){
-        super.setFacade(ejbFacade);
+        super.setFacade(loanApplicationFacade);
         loanTypeList = loanTypeMBean.getLoanTypeList();
         maxLoanAmount = BigDecimal.ZERO;
         maxTenure = 0;
@@ -93,6 +100,41 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         System.out.println("startDateInputControl: loanStartDate=" + loanStartDate);
         payment = repaymentEntries(); 
     }
+    
+    public String apply(){
+        StaffMember member = getMemberId();
+        LoanApplication loanApplication = new LoanApplication();
+        loanApplication.setMemberId(member);
+        loanApplication.setAnnualInterestRate(payment.getAnnualInterestRate());
+        loanApplication.setDateOfApplication(new Date());
+        loanApplication.setLoanAmount(payment.getLoanAmount());
+        loanApplication.setLoanStartDate(payment.getLoanStartDate());
+        loanApplication.setMonthlyPaymentAmount(payment.getMonthlyPayment());
+        loanApplication.setNumberOfPayment(payment.getNumberOfPayment());
+        loanApplication.setTotalCostOfLoan(payment.getTotalCostOfLoan());
+        loanApplication.setTotalInterest(payment.getTotalInterest());
+        loanApplicationFacade.create(loanApplication);
+        
+        return "pretty:loan-application-feedback";
+    }
+    
+    public List<LoanApplication> getMemberLoanApplicationList(){
+        Map<String, StaffMember> parameter = new HashMap<>();
+        StaffMember member = getMemberId();
+        parameter.put("memberId", member);
+        
+        return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.NAMED_QUERY_FIND_MEMBER_LOAN_APPLICATION, 
+                parameter);
+    }
+    
+    private StaffMember getMemberId(){
+        Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        String memId = (String) params.get("loginId");
+        System.out.println("member: " + memId);        
+        return registrationFacade.getUserByLoginId(memId).getMemberId();        
+    }
+    
+    
     
     
     private PaymentDAO repaymentEntries(){
@@ -143,7 +185,8 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         }
         
         totCostOfLoan = loanAmount.add(totInterest);
-        PaymentDAO entries = new PaymentDAO(entryList, totInterest, totCostOfLoan); 
+        PaymentDAO entries = new PaymentDAO(entryList, totInterest, totCostOfLoan, loanAmount, annualInterestRate, 
+        loanStartDate, mPayment, numberOfPayment); 
         
         return entries;
     }

@@ -7,6 +7,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,16 +29,14 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "LoanApplication.findAll", query = "SELECT l FROM LoanApplication l"),
     @NamedQuery(name = "LoanApplication.findById", query = "SELECT l FROM LoanApplication l WHERE l.id = :id"),
-    @NamedQuery(name = "LoanApplication.findByMemberId", query = "SELECT l FROM LoanApplication l WHERE l.memberId = :memberId"),
-    @NamedQuery(name = "LoanApplication.findByLoanPeriodInYears", query = "SELECT l FROM LoanApplication l WHERE l.loanPeriodInYears = :loanPeriodInYears"),
+    @NamedQuery(name = "LoanApplication.findByMemberId", query = "SELECT l FROM LoanApplication l WHERE l.memberId = :memberId"),    
     @NamedQuery(name = "LoanApplication.findByLoanAmount", query = "SELECT l FROM LoanApplication l WHERE l.loanAmount = :loanAmount"),
     @NamedQuery(name = "LoanApplication.findByAnnualInterestRate", query = "SELECT l FROM LoanApplication l WHERE l.annualInterestRate = :annualInterestRate"),
     @NamedQuery(name = "LoanApplication.findByLoanStartDate", query = "SELECT l FROM LoanApplication l WHERE l.loanStartDate = :loanStartDate"),
     @NamedQuery(name = "LoanApplication.findByMonthlyPaymentAmount", query = "SELECT l FROM LoanApplication l WHERE l.monthlyPaymentAmount = :monthlyPaymentAmount"),
     @NamedQuery(name = "LoanApplication.findByNumberOfPayment", query = "SELECT l FROM LoanApplication l WHERE l.numberOfPayment = :numberOfPayment"),
     @NamedQuery(name = "LoanApplication.findByTotalInterest", query = "SELECT l FROM LoanApplication l WHERE l.totalInterest = :totalInterest"),
-    @NamedQuery(name = "LoanApplication.findByTotalCostOfLoan", query = "SELECT l FROM LoanApplication l WHERE l.totalCostOfLoan = :totalCostOfLoan"),
-    @NamedQuery(name = "LoanApplication.findByMonthlyPrincipal", query = "SELECT l FROM LoanApplication l WHERE l.monthlyPrincipal = :monthlyPrincipal"),
+    @NamedQuery(name = "LoanApplication.findByTotalCostOfLoan", query = "SELECT l FROM LoanApplication l WHERE l.totalCostOfLoan = :totalCostOfLoan"),    
     @NamedQuery(name = "LoanApplication.findByDateOfApplication", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApplication = :dateOfApplication"),
     @NamedQuery(name = "LoanApplication.findByApprovedBy", query = "SELECT l FROM LoanApplication l WHERE l.approvedBy = :approvedBy"),
     @NamedQuery(name = "LoanApplication.findByDateOfApproval", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApproval = :dateOfApproval")})
@@ -46,15 +46,11 @@ public class LoanApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Integer id;
     
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "loan_period_in_years")
-    private int loanPeriodInYears;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -63,7 +59,7 @@ public class LoanApplication implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "annual_interest_rate")
-    private int annualInterestRate;
+    private BigDecimal annualInterestRate;
     @Basic(optional = false)
     @NotNull
     @Column(name = "loan_start_date")
@@ -87,10 +83,6 @@ public class LoanApplication implements Serializable {
     private BigDecimal totalCostOfLoan;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "monthly_principal")
-    private BigDecimal monthlyPrincipal;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "date_of_application")
     @Temporal(TemporalType.DATE)
     private Date dateOfApplication;
@@ -98,8 +90,12 @@ public class LoanApplication implements Serializable {
     @Column(name = "approved_by")
     private String approvedBy;
     @Column(name = "date_of_approval")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfApproval;    
+    @Temporal(TemporalType.TIME)
+    private Date dateOfApproval;  
+    @Column(name = "approval_status")
+    private Integer approvalStatus;
+    @Column(name = "loan_status")
+    private Integer loanStatus;
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     @ManyToOne(optional = false)
     private StaffMember memberId;
@@ -111,10 +107,9 @@ public class LoanApplication implements Serializable {
         this.id = id;
     }
 
-    public LoanApplication(Integer id, StaffMember memberId, int loanPeriodInYears, BigDecimal loanAmount, int annualInterestRate, Date loanStartDate, BigDecimal monthlyPaymentAmount, int numberOfPayment, BigDecimal totalInterest, BigDecimal totalCostOfLoan, BigDecimal monthlyPrincipal, Date dateOfApplication) {
+    public LoanApplication(Integer id, StaffMember memberId, BigDecimal loanAmount, BigDecimal annualInterestRate, Date loanStartDate, BigDecimal monthlyPaymentAmount, int numberOfPayment, BigDecimal totalInterest, BigDecimal totalCostOfLoan, BigDecimal monthlyPrincipal, Date dateOfApplication) {
         this.id = id;
         this.memberId = memberId;
-        this.loanPeriodInYears = loanPeriodInYears;
         this.loanAmount = loanAmount;
         this.annualInterestRate = annualInterestRate;
         this.loanStartDate = loanStartDate;
@@ -122,7 +117,6 @@ public class LoanApplication implements Serializable {
         this.numberOfPayment = numberOfPayment;
         this.totalInterest = totalInterest;
         this.totalCostOfLoan = totalCostOfLoan;
-        this.monthlyPrincipal = monthlyPrincipal;
         this.dateOfApplication = dateOfApplication;
     }
 
@@ -132,17 +126,7 @@ public class LoanApplication implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    
-
-    public int getLoanPeriodInYears() {
-        return loanPeriodInYears;
-    }
-
-    public void setLoanPeriodInYears(int loanPeriodInYears) {
-        this.loanPeriodInYears = loanPeriodInYears;
-    }
+    }  
 
     public BigDecimal getLoanAmount() {
         return loanAmount;
@@ -152,11 +136,11 @@ public class LoanApplication implements Serializable {
         this.loanAmount = loanAmount;
     }
 
-    public int getAnnualInterestRate() {
+    public BigDecimal getAnnualInterestRate() {
         return annualInterestRate;
     }
 
-    public void setAnnualInterestRate(int annualInterestRate) {
+    public void setAnnualInterestRate(BigDecimal annualInterestRate) {
         this.annualInterestRate = annualInterestRate;
     }
 
@@ -198,14 +182,6 @@ public class LoanApplication implements Serializable {
 
     public void setTotalCostOfLoan(BigDecimal totalCostOfLoan) {
         this.totalCostOfLoan = totalCostOfLoan;
-    }
-
-    public BigDecimal getMonthlyPrincipal() {
-        return monthlyPrincipal;
-    }
-
-    public void setMonthlyPrincipal(BigDecimal monthlyPrincipal) {
-        this.monthlyPrincipal = monthlyPrincipal;
     }
 
     public Date getDateOfApplication() {
@@ -252,16 +228,9 @@ public class LoanApplication implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "LoanApplication{" + "id=" + id + ", memberId=" + memberId + ", loanPeriodInYears=" 
-                + loanPeriodInYears + ", loanAmount=" + loanAmount + ", annualInterestRate=" 
-                + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPaymentAmount=" 
-                + monthlyPaymentAmount + ", numberOfPayment=" + numberOfPayment + ", totalInterest=" 
-                + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", monthlyPrincipal=" 
-                + monthlyPrincipal + ", dateOfApplication=" + dateOfApplication + ", approvedBy=" 
-                + approvedBy + ", dateOfApproval=" + dateOfApproval + '}';
-    }
+   
+   
+    
 
     public StaffMember getMemberId() {
         return memberId;
@@ -269,6 +238,27 @@ public class LoanApplication implements Serializable {
 
     public void setMemberId(StaffMember memberId) {
         this.memberId = memberId;
+    }
+
+    public Integer getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(Integer approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public Integer getLoanStatus() {
+        return loanStatus;
+    }
+
+    public void setLoanStatus(Integer loanStatus) {
+        this.loanStatus = loanStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "LoanApplication{" + "id=" + id + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPaymentAmount=" + monthlyPaymentAmount + ", numberOfPayment=" + numberOfPayment + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", dateOfApplication=" + dateOfApplication + ", approvedBy=" + approvedBy + ", dateOfApproval=" + dateOfApproval + ", approvalStatus=" + approvalStatus + ", loanStatus=" + loanStatus + ", memberId=" + memberId + '}';
     }
     
     

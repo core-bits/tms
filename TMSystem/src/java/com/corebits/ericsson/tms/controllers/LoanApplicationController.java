@@ -1,7 +1,6 @@
 
 package com.corebits.ericsson.tms.controllers;
 
-import com.corebits.ericsson.tms.dao.PaymentDAO;
 import com.corebits.ericsson.tms.models.LoanApplication;
 import com.corebits.ericsson.tms.utils.Utility;
 import javax.ejb.Stateless;
@@ -17,6 +16,7 @@ public class LoanApplicationController extends AbstractController<LoanApplicatio
     @PersistenceContext(unitName=Utility.PERSISTENCE_CONTEXT_UNIT_NAME)
     EntityManager em;
     public static final String NAMED_QUERY_FIND_ALL = "LoanApplication.findAll";
+    public static final String NAMED_QUERY_FIND_MEMBER_LOAN_APPLICATION = "LoanApplication.findByMemberId";
 
     @Override
     protected EntityManager getEntityManager() {
@@ -27,7 +27,5 @@ public class LoanApplicationController extends AbstractController<LoanApplicatio
         super(LoanApplication.class);
     }
     
-    public void apply(PaymentDAO payment, String memberId){
-        
-    }
+    
 }

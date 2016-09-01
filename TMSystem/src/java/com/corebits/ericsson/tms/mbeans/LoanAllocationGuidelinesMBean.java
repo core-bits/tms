@@ -24,6 +24,7 @@ import javax.faces.bean.ViewScoped;
 public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationGuidelines>{
     @EJB
     LoanAllocationGuidelinesController ejbFacade;
+    private LoanAllocationGuidelines loanAllocationGuideline;
     
     public LoanAllocationGuidelinesMBean(){
         super(LoanAllocationGuidelines.class);
@@ -49,4 +50,26 @@ public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationG
         }
         return BigDecimal.ZERO;
     }
+    
+    public List<LoanAllocationGuidelines> getLoanAllocationGuidlelineList(){
+        return ejbFacade.findAll();
+    }
+    
+    public void createNewLoanAllocationGuideline(){
+        ejbFacade.create(loanAllocationGuideline);
+    }
+    
+    public void updateLoanAllocationGuideline(){
+        ejbFacade.edit(loanAllocationGuideline);
+    }
+
+    public LoanAllocationGuidelines getLoanAllocationGuideline() {
+        return loanAllocationGuideline;
+    }
+
+    public void setLoanAllocationGuideline(LoanAllocationGuidelines loanAllocationGuideline) {
+        this.loanAllocationGuideline = loanAllocationGuideline;
+    }
+    
+    
 }

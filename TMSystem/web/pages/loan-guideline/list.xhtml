@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Guideline List</ui:define>
+
+    <ui:define name="content">
+        <h:form prependId="false">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h1>Guideline List</h1>
+                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanAllocationGuidelinesMBean.loanAllocationGuidlelineList}" var="item" value="#{loanAllocationGuidelinesMBean.loanAllocationGuidlelineList}" reflow="true">
+                                <p:column headerText="S/No">
+                                    <h:outputText value="#{row + 1}" />
+                                </p:column>
+
+                                <p:column headerText="Name">
+                                    <h:outputText value="#{item.loanName}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Maximum Amount">
+                                    <h:outputText style="float: right" value="#{item.maximumAmount}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                
+                                <p:column headerText="Minimum Amount">
+                                    <h:outputText style="float: right" value="#{item.minimumAmount}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                
+                                <p:column headerText="Maximum Tenure">
+                                    <h:outputText style="float: right" value="#{item.maximumTenure}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Minimum Tenure">
+                                    <h:outputText style="float: right" value="#{item.minimumTenure}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Interest Rate">
+                                    <h:outputText style="float: right" value="#{item.interestRate}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                
+                                <p:column headerText="Loan Type">
+                                    <h:outputText value="#{item.loanType.loanName}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

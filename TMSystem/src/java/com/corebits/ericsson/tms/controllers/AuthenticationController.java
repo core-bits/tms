@@ -33,6 +33,7 @@ public class AuthenticationController {
     }
 
     public User login(String userId, String password) {
+        System.out.println("userId: " + userId + ", password: " + password);
         String query = "SELECT u FROM User u WHERE u.userLoginId = :id AND u.userLoginPassword = :password";
         User user = null;
         try {

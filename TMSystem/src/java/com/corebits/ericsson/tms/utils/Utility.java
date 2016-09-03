@@ -12,4 +12,5 @@ public class Utility {
     
    public static final Short APPLICATION_STATUS_PENDING = 0;
    public static final Short APPLICATION_STATUS_APPROVED = 1;
+   public static final Short APPLICATION_STATUS_REJECTED = 2;
 }

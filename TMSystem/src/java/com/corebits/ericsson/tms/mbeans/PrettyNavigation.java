@@ -23,6 +23,7 @@ public class PrettyNavigation {
         System.out.println("homePage button clicked");
         return "pretty:home";
     }
+    
     public String registrationPage(){
         return "pretty:newmember";
     }
@@ -37,5 +38,9 @@ public class PrettyNavigation {
     
     public String contributionModification(){
         return "pretty:modifycontribution";
+    }
+    
+    public String loanApplication(){
+        return "pretty:loanapplication";
     }
 }

@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.ConfigurationController;
@@ -11,6 +15,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -35,6 +40,7 @@ public class RegistrationMbeans implements Serializable {
     StaffMember member;
     private UploadedFile file;
     private UploadedFile applicantSig;
+    private Date startDateControl;
     String unitId;
     String departmentId;
     String bank;
@@ -70,6 +76,11 @@ public class RegistrationMbeans implements Serializable {
     public RegistrationMbeans() {
     }
 
+    @PostConstruct
+    private void init() {
+        startDateControl = new Date();
+    }
+
     public String createMember() {
         member = new StaffMember();
         System.out.println("Create member button clicked");
@@ -88,6 +99,22 @@ public class RegistrationMbeans implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
             return "pretty:newmember";
         }
+
+//        try {
+//            String validateMember = rc.validateMember(memberId);
+//            if (Utility.OPERATION_STATUS.equalsIgnoreCase(validateMember)) {
+//                System.out.println("Validation complete, user does exist");
+//            } else {
+//                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", validateMember);
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//                return "pretty:newmember";
+//            }
+//        } catch (Exception e) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Internal server error validating member Id");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//            return "pretty:newmember";
+//        }
+
         try {
             member.setBank(bank);
             member.setMemberId(memberId);
@@ -488,6 +515,14 @@ public class RegistrationMbeans implements Serializable {
 
     public void setPresidentApprovalStatus(Short presidentApprovalStatus) {
         this.presidentApprovalStatus = presidentApprovalStatus;
+    }
+
+    public Date getStartDateControl() {
+        return startDateControl;
+    }
+
+    public void setStartDateControl(Date startDateControl) {
+        this.startDateControl = startDateControl;
     }
 
 }

@@ -1,4 +1,3 @@
-
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.AuthenticationController;
@@ -6,10 +5,13 @@ import com.corebits.ericsson.tms.controllers.ModificationController;
 import com.corebits.ericsson.tms.models.ContributionModification;
 import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.models.User;
+import com.corebits.ericsson.tms.utils.Utility;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -35,10 +37,18 @@ public class ContributionModificationMbean implements Serializable {
     private Date commencementDate;
     private String totalMonthlySavings;
     private boolean allowSubmit;
-
+    private String contributionStatus;
+    private List<ContributionModification> list;
     StaffMember member;
 
+    ContributionModification conmod;
+
     public ContributionModificationMbean() {
+    }
+
+    @PostConstruct
+    private void init() {
+        list = lmc.getContributionModifications(null);
     }
 
     public void modifyLoan() {
@@ -55,6 +65,7 @@ public class ContributionModificationMbean implements Serializable {
                 lm.setMemberId(user);
                 lm.setIncreaseDecreaseAmount(new BigDecimal(newAmount));
                 lm.setTotalSavingsMonthly(new BigDecimal(totalMonthlySavings));
+                lm.setApplicationStatus(Utility.APPLICATION_STATUS_PENDING);
                 lmc.persist(lm);
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Modify Loan", "Completed successfully, queued for approval");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -101,6 +112,55 @@ public class ContributionModificationMbean implements Serializable {
         }
         allowSubmit = false;
         return displayAction;
+    }
+
+    public String approveAction() {
+        System.out.println("approving contribution adjustment...");
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String requestId = params.get("approveAction");
+        try {
+//            System.out.println("approving contribution adjustment... selected requested id : " + requestId);
+            ContributionModification cm = lmc.getContributionModification(Integer.valueOf(requestId));
+            cm.setApplicationStatus(Utility.APPLICATION_STATUS_APPROVED);
+            StaffMember md = getMemberDetails();
+//            System.out.println("approving contribution adjustment...member name : " + md.getMemberName());
+            cm.setApproveBy(md.getMemberName());
+            cm.setApprovalDate(new Date());
+            md.setAuthorityToDeductAmount(cm.getIncreaseDecreaseAmount());
+            lmc.merge(cm);
+            lmc.merge(md);
+        } catch (Exception e) {
+            System.out.println("error approving contribution adjustment..." + e.getMessage());
+        }
+        return "pretty:viewcontribution";
+    }
+
+    public String disApproveAction() {
+        System.out.println("disapproving contribution adjustment...");
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String requestId = params.get("approveAction");
+        try {
+            ContributionModification contributionModification = lmc.getContributionModification(Integer.valueOf(requestId));
+            contributionModification.setApplicationStatus(Utility.APPLICATION_STATUS_REJECTED);
+            StaffMember memberDetails = getMemberDetails();
+            contributionModification.setApproveBy(memberDetails.getMemberName());
+            lmc.merge(contributionModification);
+        } catch (Exception e) {
+            System.out.println("error disapproving contribution adjustment...");
+        }
+        return "pretty:viewcontribution";
+    }
+
+    public List<ContributionModification> allContributionModifications() {
+        Short status;
+        if (contributionStatus != null) {
+            status = Short.parseShort(contributionStatus);
+        } else {
+            status = Short.valueOf("0");
+        }
+        List<ContributionModification> result = lmc.getContributionModifications(status);
+        list = result;
+        return result;
     }
 
     public String getNewAmount() {
@@ -157,6 +217,30 @@ public class ContributionModificationMbean implements Serializable {
 
     public void setAllowSubmit(boolean allowSubmit) {
         this.allowSubmit = allowSubmit;
+    }
+
+    public String getContributionStatus() {
+        return contributionStatus;
+    }
+
+    public void setContributionStatus(String contributionStatus) {
+        this.contributionStatus = contributionStatus;
+    }
+
+    public List<ContributionModification> getList() {
+        return list;
+    }
+
+    public void setList(List<ContributionModification> list) {
+        this.list = list;
+    }
+
+    public ContributionModification getConmod() {
+        return conmod;
+    }
+
+    public void setConmod(ContributionModification conmod) {
+        this.conmod = conmod;
     }
 
 }

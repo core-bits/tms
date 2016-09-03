@@ -32,6 +32,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "ContributionModification.findByCommencementDate", query = "SELECT c FROM ContributionModification c WHERE c.commencementDate = :commencementDate"),
     @NamedQuery(name = "ContributionModification.findByTotalSavingsMonthly", query = "SELECT c FROM ContributionModification c WHERE c.totalSavingsMonthly = :totalSavingsMonthly"),
     @NamedQuery(name = "ContributionModification.findByIncreaseDecrease", query = "SELECT c FROM ContributionModification c WHERE c.increaseDecrease = :increaseDecrease"),
+    @NamedQuery(name = "ContributionModification.findByStatus", query = "SELECT c FROM ContributionModification c WHERE c.applicationStatus = :applicationStatus ORDER BY c.id DESC"),
     @NamedQuery(name = "ContributionModification.findByApplicationDate", query = "SELECT c FROM ContributionModification c WHERE c.applicationDate = :applicationDate")})
 public class ContributionModification implements Serializable {
 
@@ -54,7 +55,15 @@ public class ContributionModification implements Serializable {
     private String increaseDecrease;
     @Column(name = "application_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date applicationDate;
+    private Date applicationDate;    
+    @Column(name = "application_status")
+    private Short applicationStatus;
+    @Column(name = "approval_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date approvalDate;
+    @Size(max = 75)
+    @Column(name = "approve_by")
+    private String approveBy;
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     @ManyToOne
     private StaffMember memberId;
@@ -147,4 +156,27 @@ public class ContributionModification implements Serializable {
         return "com.corebits.ericsson.tms.models.ContributionModification[ id=" + id + " ]";
     }
     
+    public Short getApplicationStatus() {
+        return applicationStatus;
+    }
+
+    public void setApplicationStatus(Short applicationStatus) {
+        this.applicationStatus = applicationStatus;
+    }
+
+    public Date getApprovalDate() {
+        return approvalDate;
+    }
+
+    public void setApprovalDate(Date approvalDate) {
+        this.approvalDate = approvalDate;
+    }
+
+    public String getApproveBy() {
+        return approveBy;
+    }
+
+    public void setApproveBy(String approveBy) {
+        this.approveBy = approveBy;
+    }
 }

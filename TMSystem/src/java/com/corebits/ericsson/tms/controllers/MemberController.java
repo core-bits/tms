@@ -28,7 +28,7 @@ public class MemberController {
     }
 
     public List<StaffMember> getMembers() {
-        String name = "Member1.findAll";
+        String name = "StaffMember.findAll";
         List<StaffMember> members = new ArrayList<>();
         try {
             members = em.createNamedQuery(name).getResultList();

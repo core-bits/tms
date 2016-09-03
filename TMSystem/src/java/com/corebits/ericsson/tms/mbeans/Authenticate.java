@@ -4,14 +4,20 @@ import com.corebits.ericsson.tms.controllers.AuthenticationController;
 import com.corebits.ericsson.tms.controllers.RegistrationController;
 import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.models.User;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -76,10 +82,10 @@ public class Authenticate implements Serializable {
 
     public String login() {
         System.out.println("login....");
-        System.out.println("User :" + userName + ", Password :" + password);
+//        System.out.println("User :" + userName + ", Password :" + password);
         FacesMessage message;
         User login = ac.login(userName, password);
-        System.out.println("login: " + login);
+//        System.out.println("login: " + login);
         if (login != null) {
             Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             params.put("loginId", userName);
@@ -105,6 +111,25 @@ public class Authenticate implements Serializable {
         FacesContext.getCurrentInstance().addMessage("messages", message);
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "pretty:logout";
+    }
+    
+    public void idleListener() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                "Your session has expired", "You have been idle for 5 minutes"));
+        HttpServletRequest hs = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String out = hs.getContextPath() + "/faces/logout.xhtml";
+        hs.getSession().invalidate();
+        redirector(out);
+    }
+    
+    private void redirector(String url) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        try {
+            ec.redirect(url);
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String userfullName() {

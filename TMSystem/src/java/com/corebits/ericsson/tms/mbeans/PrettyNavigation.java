@@ -19,11 +19,28 @@ public class PrettyNavigation {
     public PrettyNavigation() {
     }
     
+    public String homePage(){
+        System.out.println("homePage button clicked");
+        return "pretty:home";
+    }
+    
     public String registrationPage(){
         return "pretty:newmember";
     }
     
     public String newuserPage(){
         return "pretty:createuser";
+    }    
+    
+    public String viewmembers(){
+        return "pretty:members";
+    }
+    
+    public String contributionModification(){
+        return "pretty:modifycontribution";
+    }
+    
+    public String loanApplication(){
+        return "pretty:loanapplication";
     }
 }

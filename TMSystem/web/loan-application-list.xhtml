@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Loan Application List</ui:define>
+
+    <ui:define name="content">
+        <h:form prependId="false">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h1>Loan Application List</h1>
+                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
+                                <p:column headerText="S/No">
+                                    <h:outputText value="#{row + 1}" />
+                                </p:column>
+
+                                <p:column headerText="Loan Amount">
+                                    <h:outputText style="float: right" value="#{item.loanAmount}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Interest Rate">
+                                    <h:outputText style="float: right" value="#{item.annualInterestRate}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Loan Start Date">
+                                    <h:outputText value="#{item.loanStartDate}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Monthly Payment">
+                                    <h:outputText style="float: right" value="#{item.monthlyPaymentAmount}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                
+                                <p:column headerText="Number of Payment">
+                                    <h:outputText style="float: right" value="#{item.numberOfPayment}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Total Interest">
+                                    <h:outputText style="float: right" value="#{item.totalInterest}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Total Cost of Loan">
+                                    <h:outputText style="float: right" value="#{item.totalCostOfLoan}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Date of Application">
+                                    <h:outputText value="#{item.dateOfApplication}"/>
+                                </p:column>
+                                <p:column headerText="Approval Status">
+                                    <h:outputText value="#{item.approvalStatus eq 1 ? 'Approved' : 'Awaiting Approval'}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

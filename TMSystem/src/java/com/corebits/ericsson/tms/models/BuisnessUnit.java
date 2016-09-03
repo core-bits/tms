@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
@@ -52,7 +48,7 @@ public class BuisnessUnit implements Serializable {
     @Column(name = "buisness_unit_description")
     private String buisnessUnitDescription;
     @OneToMany(mappedBy = "buisnessUnit")
-    private List<Member1> member1List;
+    private List<StaffMember> member1List;
 
     public BuisnessUnit() {
     }
@@ -94,11 +90,11 @@ public class BuisnessUnit implements Serializable {
     }
 
     @XmlTransient
-    public List<Member1> getMember1List() {
+    public List<StaffMember> getMember1List() {
         return member1List;
     }
 
-    public void setMember1List(List<Member1> member1List) {
+    public void setMember1List(List<StaffMember> member1List) {
         this.member1List = member1List;
     }
 

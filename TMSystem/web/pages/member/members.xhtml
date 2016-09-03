@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Member Management</ui:define>
+
+    <ui:define name="content">    
+        <h:form id="form">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <p:dataTable var="mem" value="#{member.membersAll}" paginator="true" rows="10">
+
+                            <p:column headerText="Member Id" sortBy="#{mem.memberId}">
+                                <h:outputText value="#{mem.memberId}" />
+                            </p:column>
+
+                            <p:column headerText="Member Name" sortBy="#{mem.memberName}">
+                                <h:outputText value="#{mem.memberName}" />
+                            </p:column>
+
+                            <p:column headerText="Department" sortBy="#{mem.department.departmentName}">
+                                <h:outputText value="#{mem.department.departmentName}" />
+                            </p:column>
+
+                            <p:column headerText="Mobile" sortBy="#{mem.mobileNumber}">
+                                <h:outputText value="#{mem.mobileNumber}" />
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" 
+                                                 icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{mem}" target="#{member.member}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Staff Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="carDetail" style="text-align:left;">
+                    <h:panelGrid  columns="2" columnClasses="label,value">
+
+                        <h:outputText value="Member Id:" />
+                        <h:outputText value="#{member.member.memberId}" />
+
+                        <h:outputText value="Member Name:" />
+                        <h:outputText value="#{member.member.memberName}" />
+
+                        <h:outputText value="Department:" />
+                        <h:outputText value="#{member.member.department.departmentName}"/>
+
+                        <h:outputText value="Mobile" />
+                        <h:outputText value="#{member.member.mobileNumber}" />
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -10,9 +10,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class LoanAllocationGuidelines_ {
 
 	public static volatile SingularAttribute<LoanAllocationGuidelines, String> loanName;
-	public static volatile SingularAttribute<LoanAllocationGuidelines, Integer> interestRate;
-	public static volatile SingularAttribute<LoanAllocationGuidelines, String> maximumTenure;
-	public static volatile SingularAttribute<LoanAllocationGuidelines, String> minimumTenure;
+	public static volatile SingularAttribute<LoanAllocationGuidelines, BigDecimal> interestRate;
+	public static volatile SingularAttribute<LoanAllocationGuidelines, Integer> maximumTenure;
+	public static volatile SingularAttribute<LoanAllocationGuidelines, Integer> minimumTenure;
 	public static volatile SingularAttribute<LoanAllocationGuidelines, LoanType> loanType;
 	public static volatile SingularAttribute<LoanAllocationGuidelines, BigDecimal> maximumAmount;
 	public static volatile SingularAttribute<LoanAllocationGuidelines, BigDecimal> minimumAmount;

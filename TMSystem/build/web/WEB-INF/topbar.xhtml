@@ -1,0 +1,45 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <div class="topbar clearfix">
+        <h:form>
+            <p:growl id="messages" showDetail="true" />
+            <a id="omega-menu-button" href="#">
+                <span class="fa fa-bars"></span>
+            </a>
+
+            <span class="topbar-title"><ui:insert name="title"></ui:insert></span>
+
+            <a id="options-menu-button" href="#">
+                <span class="fa fa-ellipsis-h"></span>
+            </a>
+
+            <div id="topbar-icons">
+                <span class="topbar-search">
+                    <input type="text" placeholder="Search"/>
+                    <span class="topbar-search-icon fa fa-search"></span>
+                </span>
+                <a href="#"><span class="topbar-item-text">Messages</span><span class="topbar-icon fa fa-envelope-o"></span></a>
+                <a href="#"><span class="topbar-item-text">Settings</span><span class="topbar-icon fa fa-gear"></span></a>
+                <p:link href="#" id="userMgt"><span class="topbar-item-text">User</span><span class="topbar-icon fa fa-user"></span></p:link>
+                <p:overlayPanel id="userPanel" for="userMgt" hideEffect="clip" dynamic="true" style="width:300px">
+                    <h:panelGrid>
+                        <h:outputLabel value="#{authenticate.userfullName()}"/>
+                        <h:outputLabel value="#{authenticate.userEmail()}"/>
+                        <div class="ui-g-12">
+                            <p:commandButton action="#{authenticate.logout()}" 
+                                             value="Sign Out" 
+                                             update="messages" 
+                                             icon="fa fa-sign-out" />
+                        </div>
+                    </h:panelGrid>
+                </p:overlayPanel>
+            </div>
+        </h:form>
+    </div>
+
+</ui:composition>

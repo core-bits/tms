@@ -33,6 +33,7 @@ public class AuthenticationController {
     }
 
     public User login(String userId, String password) {
+//        System.out.println("userId: " + userId + ", password: " + password);
         String query = "SELECT u FROM User u WHERE u.userLoginId = :id AND u.userLoginPassword = :password";
         User user = null;
         try {
@@ -44,4 +45,14 @@ public class AuthenticationController {
     }
     
     
+    public User getUser(String userId) {
+        String name = "User.findByUserLoginId";
+        User user = null;
+        try {
+            user = (User) em.createNamedQuery(name).setParameter("userLoginId", userId).getSingleResult();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "error retriving User : {0}, error : {1}", new Object[]{userId, e.getMessage()});
+        }
+        return user;
+    }
 }

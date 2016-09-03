@@ -30,16 +30,40 @@
         <pattern value="/login/" />
         <view-id value="/faces/login.xhtml"/>
     </url-mapping>
+    <url-mapping id="logout">
+        <pattern value="/out/" />
+        <view-id value="/faces/logout.xhtml"/>
+    </url-mapping>
     <url-mapping id="dashboard">
         <pattern value="/dashboard/" />
         <view-id value="/faces/dashboard.xhtml"/>
     </url-mapping>
     <url-mapping id="home">
-        <pattern value="/home/" />
+        <pattern value="" />
         <view-id value="/faces/landing.xhtml"/>
     </url-mapping>
     <url-mapping id="createuser">
         <pattern value="/createuser/" />
         <view-id value="/faces/createuser.xhtml"/>
+    </url-mapping> 
+    <url-mapping id="loan-application-feedback">
+        <pattern value="/loan-application-feedback/" />
+        <view-id value="/faces/loan-application-list.xhtml"/>
+    </url-mapping>
+     <url-mapping id="loan-application-list">
+        <pattern value="/loan-application-list/" />
+        <view-id value="/faces/loan-application-list.xhtml"/>
+    </url-mapping>   
+    <url-mapping id="members">
+        <pattern value="/members/" />
+        <view-id value="/faces/pages/member/members.xhtml"/>
+    </url-mapping>       
+    <url-mapping id="modifycontribution">
+        <pattern value="/modifycontribution/" />
+        <view-id value="/faces/pages/contribution/modifyContribution.xhtml"/>
+    </url-mapping>     
+    <url-mapping id="viewcontribution">
+        <pattern value="/view/" />
+        <view-id value="/faces/pages/contribution/viewContribution.xhtml"/>
     </url-mapping>
 </pretty-config>

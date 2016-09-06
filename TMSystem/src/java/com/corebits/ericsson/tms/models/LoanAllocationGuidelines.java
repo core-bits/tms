@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
@@ -51,9 +47,9 @@ public class LoanAllocationGuidelines implements Serializable {
     private String loanName;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "maximum_amount")
-    private BigDecimal maximumAmount;
+    private double maximumAmount;
     @Column(name = "minimum_amount")
-    private BigDecimal minimumAmount;
+    private double minimumAmount;
     @Size(max = 45)
     @Column(name = "maximum_tenure")
     private int maximumTenure;
@@ -61,7 +57,7 @@ public class LoanAllocationGuidelines implements Serializable {
     @Column(name = "minimum_tenure")
     private int minimumTenure;
     @Column(name = "interest_rate")
-    private BigDecimal interestRate;
+    private double interestRate;
     @JoinColumn(name = "loan_type", referencedColumnName = "id")
     @ManyToOne
     private LoanType loanType;
@@ -89,19 +85,19 @@ public class LoanAllocationGuidelines implements Serializable {
         this.loanName = loanName;
     }
 
-    public BigDecimal getMaximumAmount() {
+    public double getMaximumAmount() {
         return maximumAmount;
     }
 
-    public void setMaximumAmount(BigDecimal maximumAmount) {
+    public void setMaximumAmount(double maximumAmount) {
         this.maximumAmount = maximumAmount;
     }
 
-    public BigDecimal getMinimumAmount() {
+    public double getMinimumAmount() {
         return minimumAmount;
     }
 
-    public void setMinimumAmount(BigDecimal minimumAmount) {
+    public void setMinimumAmount(double minimumAmount) {
         this.minimumAmount = minimumAmount;
     }
 
@@ -121,11 +117,11 @@ public class LoanAllocationGuidelines implements Serializable {
         this.minimumTenure = minimumTenure;
     }
 
-    public BigDecimal getInterestRate() {
+    public double getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(BigDecimal interestRate) {
+    public void setInterestRate(double interestRate) {
         this.interestRate = interestRate;
     }
 

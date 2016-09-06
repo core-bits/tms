@@ -4,9 +4,6 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template1.xhtml">
-
-    <ui:define name="title">New Member Form</ui:define>
-
     <ui:define name="head">
         <style type="text/css">
             .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
@@ -105,8 +102,8 @@
                                      requiredMessage="Please enter phone number of NOK" />
                         <h:outputLabel value="Address Of Nok:" for="addressOfNok" style="font-weight:bold" />
                         <p:inputTextarea id="addressOfNok" value="#{register.addressOfNok}"
-                                     title="AddressOfNok"  required="true" rows="4" cols="30"
-                                     requiredMessage="Please enter the address of NOK"/>
+                                         title="AddressOfNok"  required="true" rows="4" cols="30"
+                                         requiredMessage="Please enter the address of NOK"/>
                     </h:panelGrid>
                 </p:panel>
                 <p:panel header="Referral">
@@ -133,6 +130,7 @@
                                        requiredMessage="Please enter a valid amount for deduction" /> with effect from the month of 
                         <p:calendar id="authorityToDeductEffectiveDate"
                                     value="#{register.authorityToDeductEffectiveDate}" 
+                                    mindate="#{register.startDateControl}"
                                     title="Authority To Deduct EffectiveDate" pattern="dd/MM/yyyy" required="true"
                                     requiredMessage="Please enter a valid effective date of deduction. Use the Calender">
                         </p:calendar> and to pay such deduction to the society each month.

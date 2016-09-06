@@ -61,5 +61,9 @@
     <url-mapping id="modifycontribution">
         <pattern value="/modifycontribution/" />
         <view-id value="/faces/pages/contribution/modifyContribution.xhtml"/>
+    </url-mapping>     
+    <url-mapping id="viewcontribution">
+        <pattern value="/view/" />
+        <view-id value="/faces/pages/contribution/viewContribution.xhtml"/>
     </url-mapping>
 </pretty-config>

@@ -13,32 +13,27 @@ import java.util.List;
  */
 public class PaymentDAO  implements Serializable{
     private List<RepaymentEntryDAO> repaymentEntry;
-    private BigDecimal totalInterest;
-    private BigDecimal totalCostOfLoan;
-    private BigDecimal loanAmount;
-    private BigDecimal annualInterestRate;
+    private double totalInterest;
+    private double totalCostOfLoan;
+    private double loanAmount;
+    private double annualInterestRate;
     private Date loanStartDate;
-    private BigDecimal monthlyPayment;
+    private double monthlyPayment;
     private int numberOfPayment;
     
     public PaymentDAO(){
         repaymentEntry = new ArrayList<>();
-        totalInterest = BigDecimal.ZERO;
-        totalCostOfLoan = BigDecimal.ZERO;
-        loanAmount = BigDecimal.ZERO;
-        annualInterestRate = BigDecimal.ZERO;
         loanStartDate = new Date();
-        monthlyPayment = BigDecimal.ZERO;
     }
 
-    public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, BigDecimal totalInterest, BigDecimal totalCostOfLoan) {
+    public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, double totalInterest, double totalCostOfLoan) {
         this.repaymentEntry = repaymentEntry;
         this.totalInterest = totalInterest;
         this.totalCostOfLoan = totalCostOfLoan;
     }
 
-    public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, BigDecimal totalInterest, BigDecimal totalCostOfLoan, 
-            BigDecimal loanAmount, BigDecimal annualInterestRate, Date loanStartDate, BigDecimal monthlyPayment, 
+    public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, double totalInterest, double totalCostOfLoan, 
+            double loanAmount, double annualInterestRate, Date loanStartDate, double monthlyPayment, 
             int numberOfPayment) {
         this.repaymentEntry = repaymentEntry;
         this.totalInterest = totalInterest;
@@ -58,35 +53,35 @@ public class PaymentDAO  implements Serializable{
         this.repaymentEntry = repaymentEntry;
     }
 
-    public BigDecimal getTotalInterest() {
+    public double getTotalInterest() {
         return totalInterest;
     }
 
-    public void setTotalInterest(BigDecimal totalInterest) {
+    public void setTotalInterest(double totalInterest) {
         this.totalInterest = totalInterest;
     }
 
-    public BigDecimal getTotalCostOfLoan() {
+    public double getTotalCostOfLoan() {
         return totalCostOfLoan;
     }
 
-    public void setTotalCostOfLoan(BigDecimal totalCostOfLoan) {
+    public void setTotalCostOfLoan(double totalCostOfLoan) {
         this.totalCostOfLoan = totalCostOfLoan;
     }
 
-    public BigDecimal getLoanAmount() {
+    public double getLoanAmount() {
         return loanAmount;
     }
 
-    public void setLoanAmount(BigDecimal loanAmount) {
+    public void setLoanAmount(double loanAmount) {
         this.loanAmount = loanAmount;
     }
 
-    public BigDecimal getAnnualInterestRate() {
+    public double getAnnualInterestRate() {
         return annualInterestRate;
     }
 
-    public void setAnnualInterestRate(BigDecimal annualInterestRate) {
+    public void setAnnualInterestRate(double annualInterestRate) {
         this.annualInterestRate = annualInterestRate;
     }
 
@@ -98,11 +93,11 @@ public class PaymentDAO  implements Serializable{
         this.loanStartDate = loanStartDate;
     }
 
-    public BigDecimal getMonthlyPayment() {
+    public double getMonthlyPayment() {
         return monthlyPayment;
     }
 
-    public void setMonthlyPayment(BigDecimal monthlyPayment) {
+    public void setMonthlyPayment(double monthlyPayment) {
         this.monthlyPayment = monthlyPayment;
     }
 

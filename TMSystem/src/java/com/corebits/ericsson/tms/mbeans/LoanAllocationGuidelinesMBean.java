@@ -35,20 +35,19 @@ public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationG
         super.setFacade(ejbFacade);
     }
     
-    public BigDecimal getLoanTypeInterestRate(LoanType loanType, BigDecimal amount, int tenure){
+    public double getLoanTypeInterestRate(LoanType loanType, double amount, int tenure){
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("loanType", loanType);
         List<LoanAllocationGuidelines> list = ejbFacade.findWithNamedQuery(LoanAllocationGuidelinesController.NAMED_QUERY_FIND_BY_LOAN_TYPE, parameter);
         System.out.println("list: " + list.size() + "loanType: " + loanType + ", amount: " + amount + ", tenure: " + tenure);
         for (LoanAllocationGuidelines row : list) {
             System.out.println("row: " + row);
-            if((amount != null && amount.doubleValue() >= row.getMinimumAmount().doubleValue() && 
-                    amount.doubleValue() <= row.getMaximumAmount().doubleValue()) &&
+            if((amount >= row.getMinimumAmount() && amount <= row.getMaximumAmount()) &&
                     tenure >= row.getMinimumTenure() && tenure <= row.getMaximumTenure()){
                 return row.getInterestRate();                
             }
         }
-        return BigDecimal.ZERO;
+        return 0;
     }
     
     public List<LoanAllocationGuidelines> getLoanAllocationGuidlelineList(){

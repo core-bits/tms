@@ -32,7 +32,7 @@
                                 <h:outputLabel rendered="#{loanApplicationMBean.maxLoanAmount gt 0}"  value="Please note: Maximum amount permissible for #{loanApplicationMBean.loanType.loanDescription} is #{loanApplicationMBean.maxLoanFormatted}" style="color:green; font-style: italic"/> 
                                 <p:spacer rendered="#{loanApplicationMBean.maxLoanAmount eq 0}" />
                                 
-                                <p:outputLabel for="noOfPayment" value="No of Payments"/>
+                                <p:outputLabel for="noOfPayment" value="Number of Months"/>
                                 <p:inputNumber readonly="#{empty loanApplicationMBean.loanType}" emptyValue="0" autocomplete="off" minValue="0" maxValue="#{loanApplicationMBean.maxTenure}" value="#{loanApplicationMBean.numberOfPayment}" id="noOfPayment">
                                         <p:ajax process="noOfPayment" event="valueChange" listener="#{loanApplicationMBean.tenureInputControl}" update="@form" /> 
                                 </p:inputNumber>

@@ -3,6 +3,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
     xmlns:p="http://primefaces.org/ui"
     xmlns:po="http://primefaces.org/omega">
 
@@ -14,7 +15,7 @@
                 </div>
 
                 <div class="profile">
-                    <p:graphicImage name="images/profile.png" library="omega-layout" />
+                    <o:graphicImage height="100px" value="#{image.userPhoto()}" alt="No Photo" />
                     <span class="username">#{authenticate.userfullName()}</span>
                 </div>
 
@@ -36,11 +37,21 @@
                                 </p:submenu>
                                 <p:submenu id="om_member" label="Manage Member" icon="fa fa-sign-in">
                                     <p:menuitem id="om_member_0" action="#{pretty.viewmembers()}" value="View Member" icon="fa fa-sign-in" />
-                                </p:submenu>                            
+                                </p:submenu>                                   
+                                <p:submenu id="om_transaction" label="Transaction" icon="fa fa-sign-in">
+                                    <p:menuitem id="om_transaction_0" outcome="/pages/transaction/transactions" 
+                                                value="Create/View Tansaction" icon="fa fa-sign-in" />
+                                </p:submenu>   
                                 <p:submenu id="om_setup" label="System Setup" icon="fa fa-sign-in">
-                                    <p:menuitem id="om_setup_0" value="Create Bank" icon="fa fa-sign-in" url="#" />
-                                    <p:menuitem id="om_setup_1" value="Create Loan Type" icon="fa fa-sign-in" url="#" />
+                                    <p:menuitem id="om_setup_0" value="Manage Bank" icon="fa fa-sign-in" url="#" />
+                                    <p:menuitem id="om_setup_1" value="Manage Loan Type" icon="fa fa-sign-in" url="#" />
                                     <p:menuitem id="om_setup_2" value="Loan Guidelines" icon="fa fa-sign-in" url="#" />
+                                    <p:submenu id="om_setup_0_1" label="Manage Accounts" icon="fa fa-sign-in">                                        
+                                        <p:menuitem id="om_setup_0_1_0" value="Accounts Types" icon="fa fa-sign-in" 
+                                                    outcome="/pages/accounts/create_view_account_type" />                                    
+                                        <p:menuitem id="om_setup_0_1_1" value="Accounts" icon="fa fa-sign-in" 
+                                                    outcome="/pages/accounts/create_view_accounts" />
+                                    </p:submenu>
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="om_components_user" label="User" icon="fa fa-sitemap">

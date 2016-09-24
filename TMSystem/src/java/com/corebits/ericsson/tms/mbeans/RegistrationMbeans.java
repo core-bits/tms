@@ -64,7 +64,8 @@ public class RegistrationMbeans implements Serializable {
     String undertakingName;
     Double authorityToDeductAmount;
     Date authorityToDeductEffectiveDate;
-    byte[] applicantSignature;
+    private byte[] applicantSignature;
+    private byte[] applicantPhoto;
     Date applicationDate;
     byte[] secretarySignature;
     Date secretaryApprovalDate;
@@ -137,6 +138,9 @@ public class RegistrationMbeans implements Serializable {
             member.setUndertakingName(undertakingName);
             member.setWitnessName(witnessName);
             member.setWitnessResidentialAddress(witnessResidentialAddress);
+            member.setSecretaryApprovalStatus(Short.valueOf("0"));
+            member.setSecretaryApprovalStatus(Short.valueOf("0"));
+            member.setRegistrationStatus(Short.valueOf("0"));
 
             String response = rc.createMember(member);
             if (response != null && response.equalsIgnoreCase(Utility.OPERATION_STATUS)) {
@@ -239,7 +243,49 @@ public class RegistrationMbeans implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "pretty:newmembercont";
     }
+    
+    public String applicantPhoto(FileUploadEvent event) {
+        System.out.println("Continue create member, upload applicant Signature");
+        FacesMessage message;
+        Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        try {
+            Integer memId = (Integer) params.get("memberId");
+            member = rc.getMember(memId);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            String format = String.format("Error retriving member Id from session :%s", e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            return "pretty:newmembercont";
+        }
 
+        try {
+            try {
+                applicantPhoto = event.getFile().getContents();
+                member.setMemberPhoto(applicantPhoto);
+            } catch (Exception e) {
+                String format = String.format("Error retriving applicant photo :%s", e.getMessage());
+                System.out.println("message :" + format);
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Alert", format);
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "pretty:newmembercont";
+            }
+            System.out.println("file name :" + event.getFile().getFileName());
+
+            String response = rc.updateMember(member);
+            if (response != null && response.equalsIgnoreCase(Utility.OPERATION_STATUS)) {
+//                Map map = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "New Member", "Member profile successfully updated");
+            } else {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "New Member", "Could not update member profile");
+            }
+        } catch (Exception e) {
+            message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "New Member", e.getMessage());
+        }
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        return "pretty:newmembercont";
+    }
+    
     public String homePage() {
         System.out.println("homePage button clicked");
         return "pretty:home";
@@ -523,6 +569,14 @@ public class RegistrationMbeans implements Serializable {
 
     public void setStartDateControl(Date startDateControl) {
         this.startDateControl = startDateControl;
+    }
+
+    public byte[] getApplicantPhoto() {
+        return applicantPhoto;
+    }
+
+    public void setApplicantPhoto(byte[] applicantPhoto) {
+        this.applicantPhoto = applicantPhoto;
     }
 
 }

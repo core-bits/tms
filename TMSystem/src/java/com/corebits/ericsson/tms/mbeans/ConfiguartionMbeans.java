@@ -9,6 +9,7 @@ import com.corebits.ericsson.tms.controllers.ConfigurationController;
 import com.corebits.ericsson.tms.models.Banks;
 import com.corebits.ericsson.tms.models.BuisnessUnit;
 import com.corebits.ericsson.tms.models.Department;
+import java.io.Serializable;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
  */
 @Named(value = "config")
 @RequestScoped
-public class ConfiguartionMbeans {
+public class ConfiguartionMbeans implements Serializable {
 
     @Inject
     ConfigurationController cc;
@@ -35,7 +36,7 @@ public class ConfiguartionMbeans {
     public List<Department> getDepartments() {
         return cc.getDepartments();
     }
-    
+
     public List<Banks> getBanks() {
         return cc.getBanks();
     }

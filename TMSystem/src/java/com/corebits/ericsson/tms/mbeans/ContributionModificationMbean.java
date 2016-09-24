@@ -15,6 +15,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -22,8 +24,8 @@ import javax.inject.Inject;
  *
  * @author Tommy
  */
-@Named(value = "modifycontri")
-@SessionScoped
+@ManagedBean(name = "modifycontri")
+@ViewScoped
 public class ContributionModificationMbean implements Serializable {
 
     @Inject
@@ -40,10 +42,13 @@ public class ContributionModificationMbean implements Serializable {
     private String contributionStatus;
     private List<ContributionModification> list;
     StaffMember member;
+    private Double newCalculatedAmount;
+    Date startDateControl;
 
     ContributionModification conmod;
 
     public ContributionModificationMbean() {
+        startDateControl = new Date();
     }
 
     @PostConstruct
@@ -51,9 +56,17 @@ public class ContributionModificationMbean implements Serializable {
         list = lmc.getContributionModifications(null);
     }
 
-    public void modifyLoan() {
+    public String modifyLoan() {
+        System.out.println("........... Got here 1");
         FacesMessage message;
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        if (newCalculatedAmount != null && newCalculatedAmount < 20000) {
+            System.out.println("Message : " + newCalculatedAmount);
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Modify Contribution", "Contribution amount cannot be less than N20,000.00");
+            FacesContext.getCurrentInstance().addMessage("messages", message);
+            return "pretty:modifycontribution";
+        }
+        System.out.println("........... Got here 2");
         try {
             String userId = (String) params.get("loginId");
             StaffMember user = ac.getUser(userId).getMemberId();
@@ -64,20 +77,23 @@ public class ContributionModificationMbean implements Serializable {
                 lm.setIncreaseDecrease(action);
                 lm.setMemberId(user);
                 lm.setIncreaseDecreaseAmount(new BigDecimal(newAmount));
-                lm.setTotalSavingsMonthly(new BigDecimal(totalMonthlySavings));
+                lm.setTotalSavingsMonthly(new BigDecimal(newCalculatedAmount));
                 lm.setApplicationStatus(Utility.APPLICATION_STATUS_PENDING);
                 lmc.persist(lm);
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Modify Loan", "Completed successfully, queued for approval");
-                FacesContext.getCurrentInstance().addMessage(null, message);
             } else {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Modify Loan", "Unknown user identify, request could not be fulfil ");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Modify Loan", "Unknown user identify, request could not be fulfilled");
+                FacesContext.getCurrentInstance().addMessage("messages", message);
+                return "pretty:modifycontribution";
             }
         } catch (Exception e) {
             e.printStackTrace(System.out);
             message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Modify Loan", "Internal server error when processing your request");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().addMessage("messages", message);
+            return "pretty:modifycontribution";
         }
+        FacesContext.getCurrentInstance().addMessage("messages", message);
+        return "pretty:dashboard";
     }
 
     public StaffMember getMemberDetails() {
@@ -100,12 +116,26 @@ public class ContributionModificationMbean implements Serializable {
     }
 
     public String newAction() {
+        Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        String userId = (String) params.get("loginId");
+        StaffMember user = ac.getUser(userId).getMemberId();
         displayAction = "";
         if (action != null && !action.isEmpty()) {
             if ("INCREASE".equalsIgnoreCase(action)) {
                 displayAction = "INCREASE";
+                if (newAmount == null) {
+                    newAmount = "0";
+                }
+                System.out.println("New Amount :" + newAmount);
+                BigDecimal namt = new BigDecimal(newAmount);
+                newCalculatedAmount = user.getAuthorityToDeductAmount().add(namt).doubleValue();
             } else {
                 displayAction = "DECREASE";
+                if (newAmount == null) {
+                    newAmount = "0";
+                }
+                BigDecimal namt = BigDecimal.valueOf(Double.valueOf(newAmount));
+                newCalculatedAmount = user.getAuthorityToDeductAmount().subtract(namt).doubleValue();
             }
             allowSubmit = true;
             return displayAction;
@@ -241,6 +271,22 @@ public class ContributionModificationMbean implements Serializable {
 
     public void setConmod(ContributionModification conmod) {
         this.conmod = conmod;
+    }
+
+    public Double getNewCalculatedAmount() {
+        return newCalculatedAmount;
+    }
+
+    public void setNewCalculatedAmount(Double newCalculatedAmount) {
+        this.newCalculatedAmount = newCalculatedAmount;
+    }
+
+    public Date getStartDateControl() {
+        return startDateControl;
+    }
+
+    public void setStartDateControl(Date startDateControl) {
+        this.startDateControl = startDateControl;
     }
 
 }

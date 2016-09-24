@@ -5,6 +5,7 @@
  */
 package com.corebits.ericsson.tms.mbeans;
 
+import java.io.Serializable;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 
@@ -14,7 +15,7 @@ import javax.enterprise.context.RequestScoped;
  */
 @Named(value = "pretty")
 @RequestScoped
-public class PrettyNavigation {
+public class PrettyNavigation implements Serializable{
 
     public PrettyNavigation() {
     }

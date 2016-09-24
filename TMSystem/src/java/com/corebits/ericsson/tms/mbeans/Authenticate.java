@@ -6,8 +6,8 @@ import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.models.User;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +37,7 @@ public class Authenticate implements Serializable {
 
     private String userFullName;
     private String userEmail;
+    private byte[] photo;
     String userName;
     String password;
     User appUser;
@@ -84,13 +85,27 @@ public class Authenticate implements Serializable {
         System.out.println("login....");
 //        System.out.println("User :" + userName + ", Password :" + password);
         FacesMessage message;
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Authentication", "About to login");
+        FacesContext.getCurrentInstance().addMessage(null, message);
         User login = ac.login(userName, password);
 //        System.out.println("login: " + login);
         if (login != null) {
+            if (login.getMemberId().getRegistrationStatus() != null && login.getMemberId().getRegistrationStatus() == 0) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Authentication", "Your registration is still pending");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "pretty:authenticate";
+            }
+            if (login.getMemberId().getRegistrationStatus() != null && login.getMemberId().getRegistrationStatus() == 0) {
+                
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Authentication", "Your registration is still pending");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return "pretty:authenticate";
+            }
             Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             params.put("loginId", userName);
             params.put("fullname", login.getMemberId().getMemberName());
             params.put("email", login.getMemberId().getEmail());
+            params.put("photo", login.getMemberId().getMemberPhoto());
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Authentication", "Completed successfully");
             FacesContext.getCurrentInstance().addMessage(null, message);
         } else {
@@ -112,7 +127,7 @@ public class Authenticate implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "pretty:logout";
     }
-    
+
     public void idleListener() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
                 "Your session has expired", "You have been idle for 5 minutes"));
@@ -121,7 +136,7 @@ public class Authenticate implements Serializable {
         hs.getSession().invalidate();
         redirector(out);
     }
-    
+
     private void redirector(String url) {
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
@@ -137,6 +152,18 @@ public class Authenticate implements Serializable {
         String fullname = (String) params.get("fullname");
         userFullName = fullname;
         return userFullName;
+    }
+
+    public byte[] userPhoto() {
+        try {
+            Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            byte[] sphoto = (byte[]) params.get("photo");
+            photo = sphoto;
+            System.out.println("User Photo : "+Arrays.toString(photo));
+        } catch (Exception e) {
+            System.out.println("Exception getting user photo from session : "+e.getMessage());
+        }
+        return photo;
     }
 
     public String userEmail() {
@@ -200,6 +227,14 @@ public class Authenticate implements Serializable {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
 }

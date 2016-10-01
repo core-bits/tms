@@ -165,5 +165,4 @@ public class PaymentDAO  implements Serializable{
     public String toString() {
         return "PaymentDAO{" + "repaymentEntry=" + repaymentEntry + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPayment=" + monthlyPayment + ", numberOfPayment=" + numberOfPayment + ", loanId=" + loanId + ", loanTypeDesc=" + loanTypeDesc + ", loanSubTypeDesc=" + loanSubTypeDesc + ", loanType=" + loanType + ", loanSubType=" + loanSubType + '}';
     }
-
 }

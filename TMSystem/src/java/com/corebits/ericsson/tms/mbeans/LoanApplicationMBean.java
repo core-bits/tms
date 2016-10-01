@@ -143,6 +143,10 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         loanApplication.setTotalCostOfLoan(payment.getTotalCostOfLoan());
         loanApplication.setTotalInterest(payment.getTotalInterest());
         loanApplication.setApprovalStatus(ApprovalStatusType.PENDING.getKey());
+        loanApplication.setLoanTypeDesc(payment.getLoanTypeDesc());
+        loanApplication.setLoanSubTypeDesc(payment.getLoanSubTypeDesc());
+        
+        System.out.println("loanTypdesc: ->>>>>> " + payment.getLoanTypeDesc() + ", loanSubTypeDesc ->>>>>: " + payment.getLoanSubTypeDesc());
         loanApplicationFacade.create(loanApplication);        
         
         return "pretty:loan-application-feedback";
@@ -193,12 +197,12 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private StaffMember getMemberId(){
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         String memId = (String) params.get("loginId");
-        System.out.println("member: " + memId);        
-        return registrationFacade.getUserByLoginId(memId).getMemberId();        
+        System.out.println("member: " + memId);
+        return registrationFacade.getUserByLoginId(memId).getMemberId();
     }    
     
     private PaymentDAO repaymentEntries(){
-        LoanAllocationGuidelines loanGuideline = loanAllocationGuidelinesMBean.getLoanSubType(loanType, loanAmount, maxTenure);
+        LoanAllocationGuidelines loanGuideline = loanAllocationGuidelinesMBean.getLoanSubType(loanType, loanAmount, numberOfPayment);
         if(Objects.nonNull(loanGuideline)){
             annualInterestRate = loanGuideline.getInterestRate();
             return repaymentEntries(loanType, loanAmount, annualInterestRate, 

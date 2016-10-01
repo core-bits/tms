@@ -71,7 +71,9 @@
                                 </p:column>
 
                                 <p:column headerText="Payment Date">
-                                    <h:outputText value="#{entry.paymentDate}" />
+                                    <h:outputText value="#{entry.paymentDate}" >
+                                        <f:convertDateTime type="date"/>
+                                    </h:outputText>
                                 </p:column>
 
                                 <p:column headerText="Beginning Balance">

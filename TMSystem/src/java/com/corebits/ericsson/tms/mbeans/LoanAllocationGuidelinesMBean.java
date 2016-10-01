@@ -46,7 +46,7 @@ public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationG
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("loanType", loanType);
         List<LoanAllocationGuidelines> list = ejbFacade.findWithNamedQuery(LoanAllocationGuidelinesController.NAMED_QUERY_FIND_BY_LOAN_TYPE, parameter);
-        System.out.println("list: " + list.size() + "loanType: " + loanType + ", amount: " + amount + ", tenure: " + tenure);
+        System.out.println("list: " + list.size() + ", loanType: " + loanType + ", amount: " + amount + ", tenure: " + tenure);
         for (LoanAllocationGuidelines row : list) {
             System.out.println("row: " + row);
             if((amount >= row.getMinimumAmount() && amount <= row.getMaximumAmount()) &&

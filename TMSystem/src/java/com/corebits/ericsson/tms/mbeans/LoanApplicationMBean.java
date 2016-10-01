@@ -14,6 +14,7 @@ import com.corebits.ericsson.tms.models.LoanType;
 import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.utils.ApprovalStatusType;
 import com.corebits.ericsson.tms.utils.LoanRepaymentStatusType;
+import com.corebits.ericsson.tms.utils.SendEmail;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -308,7 +309,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         Map<String, String> map = new LinkedHashMap<>();
         map.put("loanId", loanId);
         
-        outstandingLoanPaymentList = loanRepaymentMBean.getLoanRepaymentEntries(selectedLoanApplication, LoanRepaymentStatusType.OUTSTANDING);          
+        outstandingLoanPaymentList = loanRepaymentMBean.getLoanRepaymentEntries(selectedLoanApplication, LoanRepaymentStatusType.OUTSTANDING);        
     }
 
     public double getLoanAmount() {

@@ -1,6 +1,7 @@
 
 package com.corebits.ericsson.tms.utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -14,14 +15,16 @@ import java.util.logging.Logger;
  */
 public class TMSConfiguration {
     
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
     
     private TMSConfiguration(){
-        try(InputStream stream = TMSConfiguration.class.getResourceAsStream("setting.properties")){
+        try(InputStream stream = new FileInputStream("setting.properties")){
             
             if(Objects.nonNull(stream)){
-                System.out.println("stream: ->>>>>> " + stream);
                 properties.load(stream);
+                Logger.getLogger(TMSConfiguration.class.getName()).log(Level.INFO, "property file \"setting.properties\" loaded successfully");
+            }else{
+                Logger.getLogger(TMSConfiguration.class.getName()).log(Level.SEVERE, "problem encountered loading property file \"setting.properties\"");
             }
         } catch (IOException ex) {
             Logger.getLogger(TMSConfiguration.class.getName()).log(Level.SEVERE, null, ex);

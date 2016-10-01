@@ -34,9 +34,6 @@ public class SendEmail {
     }
 
     public boolean SendMailTLS() {
-
-        
-
         Properties props = new Properties();
         props.put("mail.smtp.auth", mail_smtp_auth);
         props.put("mail.smtp.starttls.enable", mail_smtp_starttls_enable);

@@ -47,6 +47,15 @@ public abstract class AbstractController<T> {
         getEntityManager().merge(entity);
     }
     
+    
+    /*
+    *
+    * @param entity
+    */
+    public void merge(T entity){
+        getEntityManager().merge(entity);
+    }
+    
     /**
      *
      * @param id

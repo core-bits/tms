@@ -1,8 +1,9 @@
 
 package com.corebits.ericsson.tms.dao;
 
+import com.corebits.ericsson.tms.models.LoanAllocationGuidelines;
+import com.corebits.ericsson.tms.models.LoanType;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,11 @@ public class PaymentDAO  implements Serializable{
     private Date loanStartDate;
     private double monthlyPayment;
     private int numberOfPayment;
+    private String loanId;
+    private String loanTypeDesc;
+    private String loanSubTypeDesc;
+    private LoanType loanType;
+    private LoanAllocationGuidelines loanSubType;
     
     public PaymentDAO(){
         repaymentEntry = new ArrayList<>();
@@ -34,7 +40,8 @@ public class PaymentDAO  implements Serializable{
 
     public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, double totalInterest, double totalCostOfLoan, 
             double loanAmount, double annualInterestRate, Date loanStartDate, double monthlyPayment, 
-            int numberOfPayment) {
+            int numberOfPayment, String loanId, LoanType loanType, LoanAllocationGuidelines loanSubType) {
+        System.out.println("loanType: " + loanType + ", loanSubType: " + loanSubType);
         this.repaymentEntry = repaymentEntry;
         this.totalInterest = totalInterest;
         this.totalCostOfLoan = totalCostOfLoan;
@@ -43,6 +50,11 @@ public class PaymentDAO  implements Serializable{
         this.loanStartDate = loanStartDate;
         this.monthlyPayment = monthlyPayment;
         this.numberOfPayment = numberOfPayment;
+        this.loanId = loanId;
+        this.loanType = loanType;
+        this.loanSubType = loanSubType;
+        this.loanTypeDesc = loanType.getLoanName();
+        this.loanSubTypeDesc = loanSubType.getLoanName();
     }
 
     public List<RepaymentEntryDAO> getRepaymentEntry() {
@@ -109,11 +121,49 @@ public class PaymentDAO  implements Serializable{
         this.numberOfPayment = numberOfPayment;
     }
 
+    public String getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(String loanId) {
+        this.loanId = loanId;
+    }
+
+    public String getLoanTypeDesc() {
+        return loanTypeDesc;
+    }
+
+    public void setLoanTypeDesc(String loanTypeDesc) {
+        this.loanTypeDesc = loanTypeDesc;
+    }
+
+    public String getLoanSubTypeDesc() {
+        return loanSubTypeDesc;
+    }
+
+    public void setLoanSubTypeDesc(String loanSubTypeDesc) {
+        this.loanSubTypeDesc = loanSubTypeDesc;
+    }
+
+    public LoanType getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(LoanType loanType) {
+        this.loanType = loanType;
+    }
+
+    public LoanAllocationGuidelines getLoanSubType() {
+        return loanSubType;
+    }
+
+    public void setLoanSubType(LoanAllocationGuidelines loanSubType) {
+        this.loanSubType = loanSubType;
+    }
+
     @Override
     public String toString() {
-        return "PaymentDAO{" + "repaymentEntry=" + repaymentEntry + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPayment=" + monthlyPayment + ", numberOfPayment=" + numberOfPayment + '}';
+        return "PaymentDAO{" + "repaymentEntry=" + repaymentEntry + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPayment=" + monthlyPayment + ", numberOfPayment=" + numberOfPayment + ", loanId=" + loanId + ", loanTypeDesc=" + loanTypeDesc + ", loanSubTypeDesc=" + loanSubTypeDesc + ", loanType=" + loanType + ", loanSubType=" + loanSubType + '}';
     }
-    
-    
-    
+
 }

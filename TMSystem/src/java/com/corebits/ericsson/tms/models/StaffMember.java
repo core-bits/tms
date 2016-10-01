@@ -62,6 +62,22 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "StaffMember.findByPresidentApprovalStatus", query = "SELECT m FROM StaffMember m WHERE m.presidentApprovalStatus = :presidentApprovalStatus")})
 public class StaffMember implements Serializable {
 
+    @Lob
+    @Column(name = "witness_signature")
+    private byte[] witnessSignature;
+    @Lob
+    @Column(name = "applicant_signature")
+    private byte[] applicantSignature;
+    @Lob
+    @Column(name = "secretary_signature")
+    private byte[] secretarySignature;
+    @Lob
+    @Column(name = "president_signature")
+    private byte[] presidentSignature;
+    @Lob
+    @Column(name = "member_photo")
+    private byte[] memberPhoto;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -146,21 +162,6 @@ public class StaffMember implements Serializable {
     @Column(name = "president_approval_status")    
     private Short presidentApprovalStatus;    
     
-    @Lob
-    @Column(name = "witness_signature")
-    private byte[] witnessSignature;
-    @Lob
-    @Column(name = "applicant_signature")
-    private byte[] applicantSignature;
-    @Lob
-    @Column(name = "secretary_signature")
-    private byte[] secretarySignature;
-    @Lob
-    @Column(name = "president_signature")
-    private byte[] presidentSignature;
-    @Lob
-    @Column(name = "member_photo")
-    private byte[] memberPhoto;
     @Column(name = "registration_status")
     private Short registrationStatus;
     
@@ -513,5 +514,7 @@ public class StaffMember implements Serializable {
     public void setRegistrationStatus(Short registrationStatus) {
         this.registrationStatus = registrationStatus;
     }
+
+    
     
 }

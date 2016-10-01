@@ -2,23 +2,30 @@
 package com.corebits.ericsson.tms.mbeans;
 
 import com.corebits.ericsson.tms.controllers.LoanApplicationController;
+import com.corebits.ericsson.tms.controllers.LoanRepaymentController;
 import com.corebits.ericsson.tms.controllers.RegistrationController;
 import com.corebits.ericsson.tms.dao.PaymentDAO;
 import com.corebits.ericsson.tms.dao.RepaymentEntryDAO;
 import com.corebits.ericsson.tms.mbeans.util.JsfUtil;
+import com.corebits.ericsson.tms.models.LoanAllocationGuidelines;
 import com.corebits.ericsson.tms.models.LoanApplication;
+import com.corebits.ericsson.tms.models.LoanRepayment;
 import com.corebits.ericsson.tms.models.LoanType;
 import com.corebits.ericsson.tms.models.StaffMember;
+import com.corebits.ericsson.tms.utils.ApprovalStatusType;
+import com.corebits.ericsson.tms.utils.LoanRepaymentStatusType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -40,6 +47,8 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     LoanApplicationController loanApplicationFacade;
     @EJB
     RegistrationController registrationFacade;
+    @EJB
+    LoanRepaymentController repaymentFacade;
     private int loanPeriodInYears;
     private double loanAmount;
     private double annualInterestRate;
@@ -54,7 +63,11 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private LoanTypeMBean loanTypeMBean;
     @ManagedProperty(value="#{loanAllocationGuidelinesMBean}")
     private LoanAllocationGuidelinesMBean loanAllocationGuidelinesMBean;
+    @ManagedProperty(value="#{loanRepaymentMBean}")
+    private LoanRepaymentMBean loanRepaymentMBean;
     private Date startDateControl;
+    private LoanApplication selectedLoanApplication;
+    private List<LoanRepayment> outstandingLoanPaymentList;
     
     
     public LoanApplicationMBean(){        
@@ -69,7 +82,9 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         maxLoanAmount = 0;
         maxTenure = 0;
         startDateControl = new Date();
-        payment = repaymentEntries();
+        payment = new PaymentDAO();
+        selectedLoanApplication = new LoanApplication();
+        outstandingLoanPaymentList = new ArrayList<>();
     }
     
     public void onChangeLoanType(AjaxBehaviorEvent event){
@@ -101,9 +116,16 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         payment = repaymentEntries(); 
     }
     
+    private String generateTransactionId(){
+        return UUID.randomUUID().toString().substring(0, 20);
+    }
+    
     public String apply(){
         StaffMember member = getMemberId();
         LoanApplication loanApplication = new LoanApplication();
+        loanApplication.setLoanId(payment.getLoanId());
+        loanApplication.setLoanType(payment.getLoanType());
+        loanApplication.setLoanSubType(payment.getLoanSubType());
         loanApplication.setMemberId(member);
         loanApplication.setAnnualInterestRate(payment.getAnnualInterestRate());
         loanApplication.setDateOfApplication(new Date());
@@ -113,9 +135,43 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         loanApplication.setNumberOfPayment(payment.getNumberOfPayment());
         loanApplication.setTotalCostOfLoan(payment.getTotalCostOfLoan());
         loanApplication.setTotalInterest(payment.getTotalInterest());
-        loanApplicationFacade.create(loanApplication);
+        loanApplication.setApprovalStatus(ApprovalStatusType.PENDING.getKey());
+        loanApplicationFacade.create(loanApplication);        
         
         return "pretty:loan-application-feedback";
+    }
+    
+    public void approveLoan(LoanApplication loan){
+        System.out.println("loan: " + loan);
+        StaffMember member = getMemberId();
+        
+        loan.setApprovedBy(member.getMemberName());
+        loan.setDateOfApproval(new Date());
+        loan.setApprovalStatus(1);
+        loanApplicationFacade.edit(loan);
+        
+        //populate the repayment table with the entries        
+        PaymentDAO entries = repaymentEntries(loan.getLoanType(), loan.getLoanAmount(), 
+                loan.getAnnualInterestRate(), loan.getLoanStartDate(), loan.getNumberOfPayment(), 
+                loan.getLoanSubType());
+        
+        entries.getRepaymentEntry().forEach(entry ->{
+            LoanRepayment repayment = new LoanRepayment();
+            repayment.setLoanId(loan);
+            repayment.setRepaymentAmount(entry.getMonthlyPayment());
+            repayment.setMemberId(loan.getMemberId().getMemberId());
+            repayment.setRepaymentPeriod(entry.getPaymentDate());
+            repayment.setRepaymentStatus(LoanRepaymentStatusType.OUTSTANDING.toString());
+            
+            repaymentFacade.create(repayment);
+        });
+        
+        //reload 
+        getMemberLoanApplicationList();
+        
+        String message = "Loan Application with Loan ID: \""+ loan.getId() + "\" for Member: \"" + loan.getMemberId().getMemberName() + " (" + loan.getMemberId().getMemberId() + ")\" has been successfully approved";
+        
+        JsfUtil.addSuccessMessage(message);
     }
     
     public List<LoanApplication> getMemberLoanApplicationList(){
@@ -135,14 +191,25 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }    
     
     private PaymentDAO repaymentEntries(){
-        annualInterestRate = loanAllocationGuidelinesMBean.getLoanTypeInterestRate(loanType, loanAmount, numberOfPayment);
+        LoanAllocationGuidelines loanGuideline = loanAllocationGuidelinesMBean.getLoanSubType(loanType, loanAmount, maxTenure);
+        annualInterestRate = loanGuideline.getInterestRate();
+        return repaymentEntries(loanType, loanAmount, annualInterestRate, 
+                loanStartDate, numberOfPayment, loanGuideline);
+    }
+    
+    private PaymentDAO repaymentEntries(LoanType loanType, double loanAmount, 
+            double annualInterestRate, Date loanStartDate, int numberOfPayment, 
+            LoanAllocationGuidelines loanGuideline){        
+        
+        if(Objects.isNull(loanGuideline)){
+            throw new RuntimeException("No setup value available for \"" + loanType.getLoanName() + "\" \"" + loanAmount + "\", \"" + loanType.getMaximumTenure() + "\"");
+        }
+        
         System.out.println("repaymentEntries: loanAmount: " + loanAmount +", annualInterestRate: " + annualInterestRate + ", loanStartDate: "
                 + loanStartDate + ", numberOfPayment: " + numberOfPayment);
         if(loanAmount == 0 || annualInterestRate == 0 || loanStartDate == null || numberOfPayment < 1)
             return new PaymentDAO();
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        StringBuilder builder = new StringBuilder();
         RepaymentEntryDAO entry;
         double mBeginningBal = loanAmount;
         double mPayment;
@@ -151,72 +218,52 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         double mPrincipal;
         double totInterest = 0;
         double totCostOfLoan;
-        mPayment = calculateMPayment();
+        mPayment = calculateMPayment(loanAmount, numberOfPayment, annualInterestRate);
         List<RepaymentEntryDAO> entryList;
         entryList = new ArrayList<>();
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTime(loanStartDate);
         for(int i = 1; i <= numberOfPayment; i++){
-            mInterest = calculateMInterest(mBeginningBal);
+            mInterest = calculateMInterest(mBeginningBal, annualInterestRate);
             totInterest = totInterest + mInterest;
-            mPrincipal = mPayment - mInterest; //mPayment.subtract(mInterest);
+            mPrincipal = mPayment - mInterest; 
             mEndingBal = mBeginningBal - mPrincipal;
             cal.add(Calendar.MONTH, 1);
-            entry = new RepaymentEntryDAO(sdf.format(cal.getTime()), mBeginningBal, mPayment, mPrincipal, mInterest, mEndingBal);
+            entry = new RepaymentEntryDAO(cal.getTime(), mBeginningBal, mPayment, mPrincipal, mInterest, mEndingBal);
             entryList.add(entry); 
-            builder.append(sdf.format(cal.getTime()))
-                    .append("\t")
-                    .append(mBeginningBal)
-                    .append("\t")
-                    .append(mPayment)
-                    .append("\t")
-                    .append(mPrincipal)
-                    .append("\t")
-                    .append(mInterest)
-                    .append("\t")
-                    .append(mEndingBal)
-                    .append("\n");
             mBeginningBal = mEndingBal;
         }
         
         totCostOfLoan = loanAmount + totInterest;
         PaymentDAO entries = new PaymentDAO(entryList, totInterest, totCostOfLoan, loanAmount, annualInterestRate, 
-        loanStartDate, mPayment, numberOfPayment); 
+        loanStartDate, mPayment, numberOfPayment, generateTransactionId(), loanType, loanGuideline); 
         
         return entries;
     }
     
-    private double calculateMPayment(){
+    private double calculateMPayment(double loanAmount, int numberOfPayment, double annualInterestRate){
         //montly payment (Equated Monthly Payment - EMI) = P * r(1+r)^n/((1+r)^n - 1)
         //where P = principal, r = annual interest rate/100 (divided by 12 in case of monthly repayment)
         //n = number of repayments
-        double rate = computeInterestRateCompounded();
-        double onePlusRateRaisedToN = Math.pow((rate + 1), numberOfPayment);//BigDecimal.ONE.add(rate).pow(numberOfPayment);
+        double rate = computeInterestRateCompounded(annualInterestRate);
+        double onePlusRateRaisedToN = Math.pow((rate + 1), numberOfPayment);
         
         //numerator portion of formula
-        //loanAmount.multiply(rate).multiply(onePlusRateRaisedToN);
         double numerator = loanAmount * rate * onePlusRateRaisedToN;
         
         //Denomination portion of formula
-        double denominator = onePlusRateRaisedToN - 1;//onePlusRateRaisedToN.subtract(BigDecimal.ONE);
+        double denominator = onePlusRateRaisedToN - 1;
         
         // returns the monthly payment amount        
-        return numerator / denominator;//numerator.divide(denominator, 5, BigDecimal.ROUND_CEILING).setScale(2, BigDecimal.ROUND_CEILING);
+        return numerator / denominator;
     }
     
-    private double calculateMInterest(double mRemainingBal){   
-        return mRemainingBal * computeInterestRateCompounded();
-//        return mRemainingBal
-//                .multiply(computeInterestRateCompounded())
-//                .setScale(2, BigDecimal.ROUND_CEILING); 
+    private double calculateMInterest(double mRemainingBal, double annualInterestRate){   
+        return mRemainingBal * computeInterestRateCompounded(annualInterestRate);
     }
     
-    private double computeInterestRateCompounded(){
+    private double computeInterestRateCompounded(double annualInterestRate){
         return (annualInterestRate / 100 / 12);
-//        return annualInterestRate
-//                .divide(new BigDecimal(100), 5, BigDecimal.ROUND_CEILING)
-//                .divide(new BigDecimal(12), 5, BigDecimal.ROUND_CEILING)
-//                .setScale(5, BigDecimal.ROUND_CEILING); 
     }
 
     public int getLoanPeriodInYears() {
@@ -225,6 +272,16 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
 
     public void setLoanPeriodInYears(int loanPeriodInYears) {
         this.loanPeriodInYears = loanPeriodInYears;
+    }
+    
+    public void loadRepaymentEntries(LoanApplication loan){
+        selectedLoanApplication = loan;
+        System.out.println("routeToRepaymentEntries: " + selectedLoanApplication);
+        String loanId = selectedLoanApplication.getLoanId();
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("loanId", loanId);
+        
+        outstandingLoanPaymentList = loanRepaymentMBean.getLoanRepaymentEntries(selectedLoanApplication, LoanRepaymentStatusType.OUTSTANDING);          
     }
 
     public double getLoanAmount() {
@@ -259,11 +316,6 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         this.numberOfPayment = numberOfPayment;
     }
     
-    public static void main(String[] args){
-        
-        new LoanApplicationMBean().repaymentEntries();
-    }
-
     public PaymentDAO getPayment() {
         return payment;
     }
@@ -331,5 +383,33 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     public BigDecimal getMaxLoanFormatted(){
         return new BigDecimal(maxLoanAmount);
     }
+
+    public LoanApplication getSelectedLoanApplication() {
+        return selectedLoanApplication;
+    }
+
+    public void setSelectedLoanApplication(LoanApplication selectedLoanApplication) {
+        this.selectedLoanApplication = selectedLoanApplication;
+    }
+
+    public List<LoanRepayment> getOutstandingLoanPaymentList() {
+        return outstandingLoanPaymentList;
+    }
+
+    public void setOutstandingLoanPaymentList(List<LoanRepayment> outstandingLoanPaymentList) {
+        this.outstandingLoanPaymentList = outstandingLoanPaymentList;
+    }
+
+    
+
+    public LoanRepaymentMBean getLoanRepaymentMBean() {
+        return loanRepaymentMBean;
+    }
+
+    public void setLoanRepaymentMBean(LoanRepaymentMBean loanRepaymentMBean) {
+        this.loanRepaymentMBean = loanRepaymentMBean;
+    }
+    
+    
     
 }

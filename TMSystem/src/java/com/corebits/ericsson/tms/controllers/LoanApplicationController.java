@@ -17,6 +17,7 @@ public class LoanApplicationController extends AbstractController<LoanApplicatio
     EntityManager em;
     public static final String NAMED_QUERY_FIND_ALL = "LoanApplication.findAll";
     public static final String NAMED_QUERY_FIND_MEMBER_LOAN_APPLICATION = "LoanApplication.findByMemberId";
+    public static final String NAMED_QUERY_FIND_LOAN_APPLICATION_BY_LOAN_ID = "LoanApplication.findByLoanById";
 
     @Override
     protected EntityManager getEntityManager() {

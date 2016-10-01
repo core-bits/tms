@@ -2,7 +2,6 @@
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -39,10 +38,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "LoanApplication.findByTotalCostOfLoan", query = "SELECT l FROM LoanApplication l WHERE l.totalCostOfLoan = :totalCostOfLoan"),    
     @NamedQuery(name = "LoanApplication.findByDateOfApplication", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApplication = :dateOfApplication"),
     @NamedQuery(name = "LoanApplication.findByApprovedBy", query = "SELECT l FROM LoanApplication l WHERE l.approvedBy = :approvedBy"),
+    @NamedQuery(name = "LoanApplication.findByLoanById", query = "SELECT l FROM LoanApplication l WHERE l.loanId = :loanId"),
     @NamedQuery(name = "LoanApplication.findByDateOfApproval", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApproval = :dateOfApproval")})
 public class LoanApplication implements Serializable {
-
-    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -90,12 +88,30 @@ public class LoanApplication implements Serializable {
     @Column(name = "approved_by")
     private String approvedBy;
     @Column(name = "date_of_approval")
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.DATE)
     private Date dateOfApproval;  
     @Column(name = "approval_status")
     private Integer approvalStatus;
     @Column(name = "loan_status")
     private Integer loanStatus;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "loan_id")
+    private String loanId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "loan_type_desc")
+    private String loanTypeDesc;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "loan_sub_type_desc")
+    private String loanSubTypeDesc;
+    @JoinColumn(name = "loan_sub_type", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private LoanAllocationGuidelines loanSubType;
+    @JoinColumn(name = "loan_type", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private LoanType loanType;
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     @ManyToOne(optional = false)
     private StaffMember memberId;
@@ -226,11 +242,7 @@ public class LoanApplication implements Serializable {
             return false;
         }
         return true;
-    }
-
-   
-   
-    
+    }    
 
     public StaffMember getMemberId() {
         return memberId;
@@ -256,11 +268,49 @@ public class LoanApplication implements Serializable {
         this.loanStatus = loanStatus;
     }
 
-    @Override
-    public String toString() {
-        return "LoanApplication{" + "id=" + id + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPaymentAmount=" + monthlyPaymentAmount + ", numberOfPayment=" + numberOfPayment + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", dateOfApplication=" + dateOfApplication + ", approvedBy=" + approvedBy + ", dateOfApproval=" + dateOfApproval + ", approvalStatus=" + approvalStatus + ", loanStatus=" + loanStatus + ", memberId=" + memberId + '}';
+    public String getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(String loanId) {
+        this.loanId = loanId;
+    }
+
+    public LoanAllocationGuidelines getLoanSubType() {
+        return loanSubType;
+    }
+
+    public void setLoanSubType(LoanAllocationGuidelines loanSubType) {
+        this.loanSubType = loanSubType;
+    }
+
+    public LoanType getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(LoanType loanType) {
+        this.loanType = loanType;
     }
     
-    
+    public String getLoanTypeDesc() {
+        return loanTypeDesc;
+    }
+
+    public void setLoanTypeDesc(String loanTypeDesc) {
+        this.loanTypeDesc = loanTypeDesc;
+    }
+
+    public String getLoanSubTypeDesc() {
+        return loanSubTypeDesc;
+    }
+
+    public void setLoanSubTypeDesc(String loanSubTypeDesc) {
+        this.loanSubTypeDesc = loanSubTypeDesc;
+    }
+
+    @Override
+    public String toString() {
+        return "LoanApplication{" + "id=" + id + ", loanAmount=" + loanAmount + ", annualInterestRate=" + annualInterestRate + ", loanStartDate=" + loanStartDate + ", monthlyPaymentAmount=" + monthlyPaymentAmount + ", numberOfPayment=" + numberOfPayment + ", totalInterest=" + totalInterest + ", totalCostOfLoan=" + totalCostOfLoan + ", dateOfApplication=" + dateOfApplication + ", approvedBy=" + approvedBy + ", dateOfApproval=" + dateOfApproval + ", approvalStatus=" + approvalStatus + ", loanStatus=" + loanStatus + ", loanId=" + loanId + ", loanTypeDesc=" + loanTypeDesc + ", loanSubTypeDesc=" + loanSubTypeDesc + ", loanSubType=" + loanSubType + ", loanType=" + loanType + ", memberId=" + memberId + '}';
+    }
     
 }

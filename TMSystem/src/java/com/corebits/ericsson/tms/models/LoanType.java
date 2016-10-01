@@ -2,7 +2,6 @@
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;

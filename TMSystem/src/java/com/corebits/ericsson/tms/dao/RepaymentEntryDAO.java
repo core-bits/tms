@@ -2,14 +2,14 @@
 package com.corebits.ericsson.tms.dao;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
  * @author xtphere
  */
 public class RepaymentEntryDAO  implements Serializable{
-    private String paymentDate;
+    private Date paymentDate;
     private double beginingBalance;
     private double monthlyPayment;
     private double principal;
@@ -19,7 +19,7 @@ public class RepaymentEntryDAO  implements Serializable{
     public RepaymentEntryDAO(){        
     }
 
-    public RepaymentEntryDAO(String paymentDate, double beginingBalance, double monthlyPayment, double principal, 
+    public RepaymentEntryDAO(Date paymentDate, double beginingBalance, double monthlyPayment, double principal, 
             double interest, double endinBalance) {
         this.paymentDate = paymentDate;
         this.beginingBalance = beginingBalance;
@@ -29,11 +29,11 @@ public class RepaymentEntryDAO  implements Serializable{
         this.endinBalance = endinBalance;
     }
     
-    public String getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 

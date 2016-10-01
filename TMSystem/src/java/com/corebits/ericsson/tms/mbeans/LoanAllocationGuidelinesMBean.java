@@ -4,7 +4,7 @@ package com.corebits.ericsson.tms.mbeans;
 import com.corebits.ericsson.tms.controllers.LoanAllocationGuidelinesController;
 import com.corebits.ericsson.tms.models.LoanAllocationGuidelines;
 import com.corebits.ericsson.tms.models.LoanType;
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import javax.faces.bean.ViewScoped;
 //@RequestScoped
 @ManagedBean(name="loanAllocationGuidelinesMBean")
 @ViewScoped
-public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationGuidelines>{
+public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationGuidelines> implements Serializable{
     @EJB
     LoanAllocationGuidelinesController ejbFacade;
     private LoanAllocationGuidelines loanAllocationGuideline;
@@ -36,6 +36,13 @@ public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationG
     }
     
     public double getLoanTypeInterestRate(LoanType loanType, double amount, int tenure){
+        LoanAllocationGuidelines loanSubType = getLoanSubType(loanType, amount, tenure);        
+        if(loanSubType != null)
+            return loanSubType.getInterestRate();
+        return 0;
+    }
+    
+    public LoanAllocationGuidelines getLoanSubType(LoanType loanType, double amount, int tenure){
         Map<String, Object> parameter = new HashMap<>();
         parameter.put("loanType", loanType);
         List<LoanAllocationGuidelines> list = ejbFacade.findWithNamedQuery(LoanAllocationGuidelinesController.NAMED_QUERY_FIND_BY_LOAN_TYPE, parameter);
@@ -44,10 +51,10 @@ public class LoanAllocationGuidelinesMBean extends AbstractMBean<LoanAllocationG
             System.out.println("row: " + row);
             if((amount >= row.getMinimumAmount() && amount <= row.getMaximumAmount()) &&
                     tenure >= row.getMinimumTenure() && tenure <= row.getMaximumTenure()){
-                return row.getInterestRate();                
+                return row;                
             }
         }
-        return 0;
+        return null;
     }
     
     public List<LoanAllocationGuidelines> getLoanAllocationGuidlelineList(){

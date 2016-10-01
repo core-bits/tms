@@ -10,7 +10,7 @@
                     <div class="ui-g-12">
                         <div class="card">
                             <h1>Loan Application List</h1>
-                            <p:dataTable rowHover="true" id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
+                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
                                 </p:column>
@@ -69,13 +69,13 @@
                                 <p:column headerText="Approval Status">
                                     <h:outputText value="#{item.approvalStatus eq 1 ? 'Approved' : 'Awaiting Approval'}"/>
                                 </p:column>
-                                <p:column style="width:32px;text-align: center" visible="#{item.approvalStatus eq 1}">
-                                    <p:commandButton actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search" title="View Outstanding Payment">
+                                <p:column headerText="View" style="width:32px;text-align: center">
+                                    <p:commandButton disabled="#{item.approvalStatus ne 1}" actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search" title="View Outstanding Payment">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
                                 </p:column>
-                                <p:column style="width:32px;text-align: center" visible="#{item.approvalStatus ne 1 and item.memberId.memberId ne loanApplicationMBean.loggedOnMemberId}">
-                                    <p:commandButton actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" icon="fa fa-fw fa-edit" title="Approve Loan">
+                                <p:column rendered="#{loanApplicationMBean.canApprove(row, item, item.approvalStatus, item.memberId.memberId)}" headerText="Approve" style="width:32px;text-align: center">
+                                    <p:commandButton   actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" icon="fa fa-fw fa-edit" title="Approve Loan">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
                                 </p:column>

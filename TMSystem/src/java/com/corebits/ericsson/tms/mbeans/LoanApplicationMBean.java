@@ -93,6 +93,16 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         maxTenure = loanType.getMaximumTenure();
     }
     
+    public boolean canApprove(int row, LoanApplication item, String status, String memberId){
+        if(Objects.isNull(memberId) || "".equals(memberId))
+            return false;
+        
+        boolean can;
+        can = (!"1".equals(status) && !loggedOnMemberId.equals(memberId));
+        System.out.println("row: " + row + ", size: " + getMemberLoanApplicationList().size() + ", can --->>>>>>> " + can + ", status: " + status + ", memberId: " + memberId);
+        return can;
+    }
+    
     public void tenureInputControl(AjaxBehaviorEvent event){
         System.out.println("tenureInputControl: numberOfPayment=" + numberOfPayment);
         if(maxTenure < numberOfPayment){

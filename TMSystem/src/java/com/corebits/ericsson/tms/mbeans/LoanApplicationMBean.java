@@ -14,7 +14,6 @@ import com.corebits.ericsson.tms.models.LoanType;
 import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.utils.ApprovalStatusType;
 import com.corebits.ericsson.tms.utils.LoanRepaymentStatusType;
-import com.corebits.ericsson.tms.utils.SendEmail;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -94,18 +93,18 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         maxTenure = loanType.getMaximumTenure();
     }
     
-    public boolean canApprove(int row, LoanApplication item, String status, String memberId){
+    public boolean canApprove(String status, String memberId){
+        System.out.println("canApprove ->>>>> " + (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId)));
         if(Objects.isNull(memberId) || "".equals(memberId))
-            return false;
-        
-        boolean can;
-        can = (!"1".equals(status) && !loggedOnMemberId.equals(memberId));
-        System.out.println("row: " + row + ", size: " + getMemberLoanApplicationList().size() + ", can --->>>>>>> " + can + ", status: " + status + ", memberId: " + memberId);
-        return can;
+            return false;       
+       
+        return (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId));
+        //System.out.println("row: " + row + ", size: " + getMemberLoanApplicationList().size() + ", can --->>>>>>> " + can + ", status: " + status + ", memberId: " + memberId);
+       
     }
     
     public void tenureInputControl(AjaxBehaviorEvent event){
-        System.out.println("tenureInputControl: numberOfPayment=" + numberOfPayment);
+        //System.out.println("tenureInputControl: numberOfPayment=" + numberOfPayment);
         if(maxTenure < numberOfPayment){
             this.numberOfPayment = maxTenure;
             JsfUtil.addErrorMessage("Allowed maximum tenure for \"" + loanType.getLoanDescription() + "\" is " + "\"" + maxTenure + "\"");
@@ -115,7 +114,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public void loanAmountInputControl(AjaxBehaviorEvent event){
-        System.out.println("loanAmountInputControl: loanAmount=" + loanAmount);
+//        System.out.println("loanAmountInputControl: loanAmount=" + loanAmount);
         if(maxLoanAmount < loanAmount){
             loanAmount = 0;
             JsfUtil.addErrorMessage("Allowed maximum amount for \"" + loanType + "\" is " + "\"" + maxLoanAmount + "\"");
@@ -124,7 +123,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public void startDateInputControl(AjaxBehaviorEvent event){
-        System.out.println("startDateInputControl: loanStartDate=" + loanStartDate);
+        //System.out.println("startDateInputControl: loanStartDate=" + loanStartDate);
         payment = repaymentEntries(); 
         
         if(Objects.nonNull(payment)){
@@ -140,7 +139,9 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public String apply(){
+        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();        
         StaffMember member = getMemberId();
+        map.put("applicant", member);
         LoanApplication loanApplication = new LoanApplication();
         loanApplication.setLoanId(payment.getLoanId());
         loanApplication.setLoanType(payment.getLoanType());
@@ -164,7 +165,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public void approveLoan(LoanApplication loan){
-        System.out.println("loan: " + loan);
+//        System.out.println("loan: " + loan);
         StaffMember member = getMemberId();
         
         loan.setApprovedBy(member.getMemberName());
@@ -198,17 +199,24 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     public List<LoanApplication> getMemberLoanApplicationList(){
         Map<String, StaffMember> parameter = new HashMap<>();
-        StaffMember member = getMemberId();
-        parameter.put("memberId", member);
+        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        StaffMember applicant = (StaffMember)map.get("applicant");
+        StaffMember member = applicant;//getMemberId();
         
-        return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.NAMED_QUERY_FIND_MEMBER_LOAN_APPLICATION, 
+        if(Objects.nonNull(member)){
+            parameter.put("memberId", member);
+            return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.FIND_MEMBER_LOAN_APPLICATION, 
+                    parameter);
+        }else{
+            return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.NAMED_QUERY_FIND_ALL, 
                 parameter);
+        }
     }
     
     private StaffMember getMemberId(){
         Map<String, Object> params = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
         String memId = (String) params.get("loginId");
-        System.out.println("member: " + memId);
+        //System.out.println("member: " + memId);
         return registrationFacade.getUserByLoginId(memId).getMemberId();
     }    
     
@@ -226,15 +234,15 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private PaymentDAO repaymentEntries(LoanType loanType, double loanAmount, 
             double annualInterestRate, Date loanStartDate, int numberOfPayment, 
             LoanAllocationGuidelines loanGuideline){   
-        System.out.println("loanType: " + loanType + ", loanAmount: " + loanAmount + ", annualInterestRate: " + annualInterestRate
-        + ", loanStartDate: " + loanStartDate + ", numberOfPayment " + numberOfPayment + ", loanGuideline: " + loanGuideline);
+//        System.out.println("loanType: " + loanType + ", loanAmount: " + loanAmount + ", annualInterestRate: " + annualInterestRate
+//        + ", loanStartDate: " + loanStartDate + ", numberOfPayment " + numberOfPayment + ", loanGuideline: " + loanGuideline);
         
         if(Objects.isNull(loanGuideline)){
             throw new RuntimeException("No setup value available for \"" + loanType.getLoanName() + "\" \"" + loanAmount + "\", \"" + loanType.getMaximumTenure() + "\"");
         }
         
-        System.out.println("repaymentEntries: loanAmount: " + loanAmount +", annualInterestRate: " + annualInterestRate + ", loanStartDate: "
-                + loanStartDate + ", numberOfPayment: " + numberOfPayment);
+//        System.out.println("repaymentEntries: loanAmount: " + loanAmount +", annualInterestRate: " + annualInterestRate + ", loanStartDate: "
+//                + loanStartDate + ", numberOfPayment: " + numberOfPayment);
         if(loanAmount == 0 || annualInterestRate == 0 || loanStartDate == null || numberOfPayment < 1)
             return new PaymentDAO();
         
@@ -304,7 +312,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     public void loadRepaymentEntries(LoanApplication loan){
         selectedLoanApplication = loan;
-        System.out.println("routeToRepaymentEntries: " + selectedLoanApplication);
+//        System.out.println("routeToRepaymentEntries: " + selectedLoanApplication);
         String loanId = selectedLoanApplication.getLoanId();
         Map<String, String> map = new LinkedHashMap<>();
         map.put("loanId", loanId);

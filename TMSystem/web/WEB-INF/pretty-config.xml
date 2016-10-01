@@ -48,11 +48,11 @@
     </url-mapping> 
     <url-mapping id="loan-application-feedback">
         <pattern value="/loan-application-feedback/" />
-        <view-id value="/faces/loan-application-list.xhtml"/>
+        <view-id value="/faces/pages/loan/feedback.xhtml"/>
     </url-mapping>
      <url-mapping id="loan-application-list">
         <pattern value="/loan-application-list/" />
-        <view-id value="/faces/loan-application-list.xhtml"/>
+        <view-id value="/faces/pages/loan/index.xhtml"/>
     </url-mapping>   
     <url-mapping id="members">
         <pattern value="/members/" />

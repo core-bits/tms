@@ -114,6 +114,13 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     public void startDateInputControl(AjaxBehaviorEvent event){
         System.out.println("startDateInputControl: loanStartDate=" + loanStartDate);
         payment = repaymentEntries(); 
+        
+        if(Objects.nonNull(payment)){
+            if(payment.getRepaymentEntry().isEmpty()){
+                String message = "We are sorry there is no provision for the supplied values. Please contact \"Accounts\"";
+                JsfUtil.addErrorMessage(message);
+            }
+        }
     }
     
     private String generateTransactionId(){
@@ -192,14 +199,20 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     
     private PaymentDAO repaymentEntries(){
         LoanAllocationGuidelines loanGuideline = loanAllocationGuidelinesMBean.getLoanSubType(loanType, loanAmount, maxTenure);
-        annualInterestRate = loanGuideline.getInterestRate();
-        return repaymentEntries(loanType, loanAmount, annualInterestRate, 
-                loanStartDate, numberOfPayment, loanGuideline);
+        if(Objects.nonNull(loanGuideline)){
+            annualInterestRate = loanGuideline.getInterestRate();
+            return repaymentEntries(loanType, loanAmount, annualInterestRate, 
+                    loanStartDate, numberOfPayment, loanGuideline);
+        }
+        
+        return new PaymentDAO();
     }
     
     private PaymentDAO repaymentEntries(LoanType loanType, double loanAmount, 
             double annualInterestRate, Date loanStartDate, int numberOfPayment, 
-            LoanAllocationGuidelines loanGuideline){        
+            LoanAllocationGuidelines loanGuideline){   
+        System.out.println("loanType: " + loanType + ", loanAmount: " + loanAmount + ", annualInterestRate: " + annualInterestRate
+        + ", loanStartDate: " + loanStartDate + ", numberOfPayment " + numberOfPayment + ", loanGuideline: " + loanGuideline);
         
         if(Objects.isNull(loanGuideline)){
             throw new RuntimeException("No setup value available for \"" + loanType.getLoanName() + "\" \"" + loanAmount + "\", \"" + loanType.getMaximumTenure() + "\"");

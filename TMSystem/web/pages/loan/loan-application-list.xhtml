@@ -69,13 +69,11 @@
                                 <p:column headerText="Approval Status">
                                     <h:outputText value="#{item.approvalStatus eq 1 ? 'Approved' : 'Awaiting Approval'}"/>
                                 </p:column>
-                                <p:column headerText="View" style="width:32px;text-align: center">
-                                    <p:commandButton disabled="#{item.approvalStatus ne 1}" actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search" title="View Outstanding Payment">
+                                <p:column headerText="Action" style="width:32px;text-align: center">
+                                    <p:commandButton rendered="#{loanApplicationMBean.canView(item.approvalStatus, item.memberId.memberId)}" actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search" title="View Outstanding Payment">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
-                                </p:column>
-                                <p:column rendered="#{loanApplicationMBean.canApprove(item.approvalStatus, item.memberId.memberId)}" headerText="Approve" style="width:32px;text-align: center">
-                                    <p:commandButton   actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" icon="fa fa-fw fa-edit" title="Approve Loan">
+                                    <p:commandButton rendered="#{loanApplicationMBean.canApprove(item.approvalStatus, item.memberId.memberId)}" actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" icon="fa fa-fw fa-edit" title="Approve Loan">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
                                 </p:column>

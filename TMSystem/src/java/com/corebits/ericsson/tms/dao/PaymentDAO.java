@@ -41,7 +41,6 @@ public class PaymentDAO  implements Serializable{
     public PaymentDAO(List<RepaymentEntryDAO> repaymentEntry, double totalInterest, double totalCostOfLoan, 
             double loanAmount, double annualInterestRate, Date loanStartDate, double monthlyPayment, 
             int numberOfPayment, String loanId, LoanType loanType, LoanAllocationGuidelines loanSubType) {
-        System.out.println("loanType: " + loanType + ", loanSubType: " + loanSubType);
         this.repaymentEntry = repaymentEntry;
         this.totalInterest = totalInterest;
         this.totalCostOfLoan = totalCostOfLoan;

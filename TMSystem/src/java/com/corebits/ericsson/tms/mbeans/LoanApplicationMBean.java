@@ -68,11 +68,11 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private Date startDateControl;
     private LoanApplication selectedLoanApplication;
     private List<LoanRepayment> outstandingLoanPaymentList;
+    private String loggedOnMemberId;
     
     
     public LoanApplicationMBean(){        
-        super(LoanApplication.class);
-        System.out.println("constructor");  
+        super(LoanApplication.class);  
     }
     
     @PostConstruct
@@ -85,6 +85,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         payment = new PaymentDAO();
         selectedLoanApplication = new LoanApplication();
         outstandingLoanPaymentList = new ArrayList<>();
+        loggedOnMemberId = this.getMemberId().getMemberId();
     }
     
     public void onChangeLoanType(AjaxBehaviorEvent event){
@@ -117,7 +118,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         
         if(Objects.nonNull(payment)){
             if(payment.getRepaymentEntry().isEmpty()){
-                String message = "We are sorry there is no provision for the supplied values. Please contact \"Accounts\"";
+                String message = "We are sorry there is no provision for the supplied values. Please contact \"Accounts Department\"";
                 JsfUtil.addErrorMessage(message);
             }
         }
@@ -146,7 +147,6 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         loanApplication.setLoanTypeDesc(payment.getLoanTypeDesc());
         loanApplication.setLoanSubTypeDesc(payment.getLoanSubTypeDesc());
         
-        System.out.println("loanTypdesc: ->>>>>> " + payment.getLoanTypeDesc() + ", loanSubTypeDesc ->>>>>: " + payment.getLoanSubTypeDesc());
         loanApplicationFacade.create(loanApplication);        
         
         return "pretty:loan-application-feedback";
@@ -416,9 +416,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     public void setOutstandingLoanPaymentList(List<LoanRepayment> outstandingLoanPaymentList) {
         this.outstandingLoanPaymentList = outstandingLoanPaymentList;
     }
-
     
-
     public LoanRepaymentMBean getLoanRepaymentMBean() {
         return loanRepaymentMBean;
     }
@@ -427,6 +425,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         this.loanRepaymentMBean = loanRepaymentMBean;
     }
     
-    
-    
+    public String getLoggedOnMemberId(){
+        return loggedOnMemberId;
+    }
 }

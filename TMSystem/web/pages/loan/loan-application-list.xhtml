@@ -74,7 +74,7 @@
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
                                 </p:column>
-                                <p:column style="width:32px;text-align: center" visible="#{item.approvalStatus ne 1}">
+                                <p:column style="width:32px;text-align: center" visible="#{item.approvalStatus ne 1 and item.memberId.memberId ne loanApplicationMBean.loggedOnMemberId}">
                                     <p:commandButton actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" icon="fa fa-fw fa-edit" title="Approve Loan">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>

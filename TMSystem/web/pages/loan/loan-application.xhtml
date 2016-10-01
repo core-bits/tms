@@ -65,7 +65,7 @@
                         
                         <div class="card">
                             <h1>Repayment Breakdown</h1>
-                            <p:dataTable  id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" var="entry" value="#{loanApplicationMBean.payment.repaymentEntry}" reflow="true">
+                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" var="entry" value="#{loanApplicationMBean.payment.repaymentEntry}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
                                 </p:column>

@@ -94,7 +94,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public boolean canApprove(String status, String memberId){
-        //System.out.println("canApprove ->>>>> " + (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId)));
+        System.out.println("canApprove ->>>>> " + (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId)));
         if(Objects.isNull(memberId) || "".equals(memberId))
             return false;       
        
@@ -104,7 +104,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     public boolean canView(String status, String memberId){
-        //System.out.println("canApprove ->>>>> " + (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId)));
+        System.out.println("canApprove ->>>>> " + (!ApprovalStatusType.APPROVED.getKey().toString().equals(status) && !loggedOnMemberId.equals(memberId)));
         if(Objects.isNull(memberId) || "".equals(memberId))
             return false;       
        

@@ -29,11 +29,11 @@ public class SendEmail {
         
     public static void main(String[] args) {
         SendEmail se = new SendEmail();
-        System.out.println("Response TLS : " + se.SendMailTLS());
+        System.out.println("Response TLS : " + se.SendMailTLS("", ""));
 //        System.out.println("Response SSL : " + se.SendMailSSL());
     }
 
-    public boolean SendMailTLS() {
+    public boolean SendMailTLS(String recipient, String emessage) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", mail_smtp_auth);
         props.put("mail.smtp.starttls.enable", mail_smtp_starttls_enable);
@@ -50,9 +50,9 @@ public class SendEmail {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(username));
-            message.setSubject("Testing Subject");
-            message.setText("Dear Mail Crawler, \n\n No spam to my email, please!");
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+            message.setSubject("TMS Account Activation");
+            message.setText(emessage);
 
             Transport.send(message);
 

@@ -6,44 +6,63 @@
 
     <ui:composition>
 
-        <p:dialog id="PassengerViewDlg" widgetVar="PassengerViewDialog" modal="true" resizable="false" header="View Passenger Detail">
+        <p:dialog id="LoanApprovalViewDlg" widgetVar="LoanApprovalViewDialog" modal="true" resizable="false" header="Approve Loan">
 
-            <h:form id="PassengerViewForm">
+            <h:form id="LoanApprovalForm">
 
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{passengerMBean.selectedPassenger != null}">
+                    <p:panelGrid columns="2" rendered="#{loanApplicationMBean.selectedLoanApplication != null}">
 
-                        <h:outputText value="Passport Number" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.passportNumber}" title="Passport Number" />
+                        <h:outputText value="Loan ID" />
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.loanId}" title="Loan ID" />
 
-                        <h:outputText value="First Name" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.firstName}" title="First Name" />
+                        <h:outputText value="Member ID" />
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.memberId.memberId}" title="Member ID" />
 
-                        <h:outputText value="Last Name"/>
-                        <h:outputText value="#{passengerMBean.selectedPassenger.lastName}" title="Last Name" />
+                        <h:outputText value="Member Name"/>
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.memberId.memberName}" title="Member Name" />
                         
-                        <h:outputText value="Other Name" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.otherName}" title="Other Name" />
+                        <h:outputText value="Loan Amount" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.loanAmount}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>                       
                         
-                        <h:outputText value="Gender" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.gender}" title="Gender" />                        
+                        <h:outputText value="Interest Rate" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.annualInterestRate}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
                         
-                         <h:outputText value="Date of Birth"/>
-                         <h:outputText value="#{passengerMBean.selectedPassenger.dateOfBirth}" >
+                         <h:outputText value="Loan Start Date"/>
+                         <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.loanStartDate}">
                              <f:convertDateTime pattern="yyyy-MM-dd" />
                          </h:outputText>
                         
-                        <h:outputText value="Home Address"/>
-                        <h:outputText value="#{passengerMBean.selectedPassenger.homeAddress}" title="Home Address" />
+                        <h:outputText value="Monthly Payment"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.monthlyPaymentAmount}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
                         
-                        <h:outputText value="Contact Phone Number" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.contactPhoneNumber}" title="Contact Phone Number" />
+                        <h:outputText value="Number of Payment" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.numberOfPayment}"/>
                         
-                        <h:outputText value="Next of Kin" />
-                        <h:outputText value="#{passengerMBean.selectedPassenger.nextOfKin}" title="Next of Kin" />
+                        <h:outputText value="Total Interest"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.totalInterest}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                        <h:outputText value="Total Cost of Loan"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.totalCostOfLoan}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                        <h:outputText value="Date of Application"/>
+                         <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.dateOfApplication}">
+                             <f:convertDateTime pattern="yyyy-MM-dd" />
+                         </h:outputText>
                         
                     </p:panelGrid>
-                    <p:commandButton value="Close" onclick="PassengerViewDialog.hide()" ajax="false"/>
+                    <p:commandButton actionListener="#{loanApplicationMBean.approveLoan(loanApplicationMBean.selectedLoanApplication)}" value="Approve" update="display,:LoanApprovalListForm:repayment,:growl" oncomplete="PF('LoanApprovalViewDialog').hide()"/>
+                    <p:commandButton value="Close" onclick="LoanApprovalViewDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

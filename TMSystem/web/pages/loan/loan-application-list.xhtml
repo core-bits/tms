@@ -4,13 +4,15 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
         <p:growl id="growl" life="20000"/>
-        <h:form id="LoanApprovalListForm">
+        <h:form prependId="false">
             <div class="ui-fluid">
                 <div class="ui-g">
                     <div class="ui-g-12">
                         <div class="card">
                             <h1>Loan Application List</h1>
-                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
+                            <p:dataTable id="repayment" rowIndexVar="row" 
+                                         rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" 
+                                         var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
                                 </p:column>
@@ -70,10 +72,14 @@
                                     <h:outputText value="#{item.approvalStatus eq 1 ? 'Approved' : 'Awaiting Approval'}"/>
                                 </p:column>
                                 <p:column headerText="Action" style="width:32px;text-align: center">
-                                    <p:commandButton rendered="#{loanApplicationMBean.canView(item.approvalStatus, item.memberId.memberId)}" actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search" title="View Outstanding Payment">
+                                    <p:commandButton rendered="#{loanApplicationMBean.canView(item.approvalStatus, item.memberId.memberId)}" 
+                                                     actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search"
+                                                     title="View Outstanding Payment">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
-                                    <p:commandButton update=":LoanApprovalForm,:growl" oncomplete="PF('LoanApprovalViewDialog').show()" rendered="#{loanApplicationMBean.canApprove(item.approvalStatus, item.memberId.memberId)}" icon="fa fa-fw fa-edit" title="Approve Loan">
+                                    <p:commandButton rendered="#{loanApplicationMBean.canApprove(item.approvalStatus, item.memberId.memberId)}" 
+                                                     actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" 
+                                                     icon="fa fa-fw fa-edit" title="Approve Loan">
                                         <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
                                    </p:commandButton>
                                 </p:column>
@@ -82,7 +88,8 @@
                         
                         <div class="card">
                             <h1>Outstanding Repayment</h1>
-                            <p:dataTable  id="outstanding" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.outstandingLoanPaymentList}" var="repayment" value="#{loanApplicationMBean.outstandingLoanPaymentList}" reflow="true">
+                            <p:dataTable  id="outstanding" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.outstandingLoanPaymentList}"
+                                          var="repayment" value="#{loanApplicationMBean.outstandingLoanPaymentList}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
                                 </p:column>
@@ -100,7 +107,7 @@
 
                                 <p:column headerText="Amount Due">
                                     <h:outputText style="float: right" value="#{repayment.repaymentAmount}">
-                                        <f:convertNumber type="currency" currencySymbol=""/>
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
                                     </h:outputText>
                                 </p:column>
 

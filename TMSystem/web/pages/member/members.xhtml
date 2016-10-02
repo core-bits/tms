@@ -67,14 +67,14 @@
                             <td>
                                 <p:commandButton style="width: 100px; height: 30px" 
                                                  value="Approve" 
-                                                 update="form:messages, form:memDetails"
+                                                 update="form:messages, :form:memDetails"
                                                  oncomplete="PF('carDialog').hide()"
                                                  actionListener="#{member.activateMemeber()}">
                                     <f:param name="approve" value="#{member.member.memberId}"/>
                                 </p:commandButton>
                                 <p:commandButton style="width: 100px; height: 30px" 
                                                  value="Disable" 
-                                                 update="form:messages, form:memDetails"
+                                                 update="form:messages, :form:memDetails"
                                                  oncomplete="PF('carDialog').hide()"
                                                  actionListener="#{member.deActivateMemeber()}">
                                     <f:param name="disable" value="#{member.member.memberId}"/>

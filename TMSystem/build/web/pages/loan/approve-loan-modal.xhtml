@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="LoanApprovalViewDlg" widgetVar="LoanApprovalViewDialog" modal="true" resizable="false" header="Approve Loan">
+
+            <h:form id="LoanApprovalForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{loanApplicationMBean.selectedLoanApplication != null}">
+
+                        <h:outputText value="Loan ID" />
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.loanId}" title="Loan ID" />
+
+                        <h:outputText value="Member ID" />
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.memberId.memberId}" title="Member ID" />
+
+                        <h:outputText value="Member Name"/>
+                        <h:outputText value="#{loanApplicationMBean.selectedLoanApplication.memberId.memberName}" title="Member Name" />
+                        
+                        <h:outputText value="Loan Amount" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.loanAmount}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>                       
+                        
+                        <h:outputText value="Interest Rate" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.annualInterestRate}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                         <h:outputText value="Loan Start Date"/>
+                         <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.loanStartDate}">
+                             <f:convertDateTime pattern="yyyy-MM-dd" />
+                         </h:outputText>
+                        
+                        <h:outputText value="Monthly Payment"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.monthlyPaymentAmount}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                        <h:outputText value="Number of Payment" />
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.numberOfPayment}"/>
+                        
+                        <h:outputText value="Total Interest"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.totalInterest}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                        <h:outputText value="Total Cost of Loan"/>
+                        <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.totalCostOfLoan}">
+                            <f:convertNumber type="currency"  currencySymbol=""/>
+                        </h:outputText>
+                        
+                        <h:outputText value="Date of Application"/>
+                         <h:outputText style="float: right" value="#{loanApplicationMBean.selectedLoanApplication.dateOfApplication}">
+                             <f:convertDateTime pattern="yyyy-MM-dd" />
+                         </h:outputText>
+                        
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{loanApplicationMBean.approveLoan(loanApplicationMBean.selectedLoanApplication)}" value="Approve" update="display,:LoanApprovalListForm:repayment,:growl" oncomplete="PF('LoanApprovalViewDialog').hide()"/>
+                    <p:commandButton value="Close" onclick="LoanApprovalViewDialog.hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

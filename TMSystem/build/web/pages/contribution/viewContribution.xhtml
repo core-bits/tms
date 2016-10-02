@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Contribution Management</ui:define>
+
+    <ui:define name="content">    
+        <h:form id="form">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <h1>Contribution Adjustment List</h1>
+                        <p:dataTable id="contriblist" var="mem" value="#{modifycontri.list}"
+                                     paginator="true" rows="10">
+                            <p:column headerText="Name" sortBy="#{mem.memberId.memberName}">
+                                <h:outputText value="#{mem.memberId.memberName}" />
+                            </p:column>
+
+                            <p:column headerText="Request" sortBy="#{mem.increaseDecrease}">
+                                <h:outputText value="#{mem.increaseDecrease}" />
+                            </p:column>
+
+                            <p:column headerText="New Amount" sortBy="#{mem.increaseDecreaseAmount}">
+                                <h:outputText value="#{mem.increaseDecreaseAmount}" />
+                            </p:column>
+
+                            <p:column headerText="Previous Amount" sortBy="#{mem.memberId.authorityToDeductAmount}">
+                                <h:outputText value="#{mem.memberId.authorityToDeductAmount}" />
+                            </p:column>
+
+                            <p:column headerText="Date" sortBy="#{mem.applicationDate}">
+                                <h:outputText value="#{mem.applicationDate}" />
+                            </p:column>
+
+                            <p:column headerText="Status" sortBy="#{mem.applicationStatus}">
+                                <h:outputText value="#{mem.applicationStatus eq 1?'COMPLETED':'PENDING'}" />
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":form:carDetail" oncomplete="PF('conDialog').show()" 
+                                                 disabled="#{mem.applicationStatus eq 1?true:false}"
+                                                 icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{mem}" target="#{modifycontri.conmod}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Approve/Disapprove" widgetVar="conDialog" modal="true" 
+                      showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                <p:outputPanel id="carDetail" style="text-align:left;">
+                    <div>
+                        Please complete the required action below by clicking the preferred action button <br/>
+                    </div>
+                    <h:panelGrid  columns="2">
+
+                        <p:commandButton action="#{modifycontri.approveAction()}" 
+                                         value="Approve" update=":form:contriblist" icon="fa fa-check" >
+                            <f:param name="approveAction" value="#{modifycontri.conmod.id}"/>
+                        </p:commandButton>
+                        <p:commandButton action="#{modifycontri.disApproveAction()}" 
+                                         value="Disapprove" update="contriblist" icon="fa fa-check" >
+                            <f:param name="disApproveAction" value="#{modifycontri.conmod.id}"/>                        
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

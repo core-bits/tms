@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+        <h:form id="PassengerListForm">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h1>Passenger List</h1>
+                            <p:dataTable id="datalist" rowIndexVar="row" 
+                                         rendered="#{not empty passengerMBean.passengerList}" 
+                                         var="item" value="#{passengerMBean.passengerList}" 
+                                         reflow="true"
+                                         selectionMode="single" selection="#{passengerMBean.selectedPassenger}"
+                                         rowKey="#{item.id}"
+                                         paginator="true"
+                                         rows="10"
+                                         rowsPerPageTemplate="10,20,30,50,100">
+<!--                                <p:ajax event="rowSelect" update="createButton viewButton editButton deleteButton"/>
+                                <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>-->
+                                <f:facet name="header"> 
+                                    
+                            <div align="right">
+                                <h:commandLink>  
+                                    <p:graphicImage title="Excel Download" value="./../resources/images/excel_export.jpg" style="border:0;"/>
+                                    <p:dataExporter type="xls" target="datalist" fileName="download"/>  
+                                </h:commandLink>  
+                                <p:spacer width="5"/>
+                                <h:commandLink>  
+                                    <p:graphicImage title="PDF Download" value="./../resources/images/pdfIcon.jpg" style="border:0;"/>
+                                    <p:dataExporter type="pdf" target="datalist" fileName="download"/> 
+                                </h:commandLink> 
+                                <p:spacer width="5"/>
+                                <h:commandLink>  
+                                    <p:graphicImage title="CSV Download" value="./../resources/images/csv_export.png" style="border:0;"/>
+                                    <p:dataExporter type="csv" target="datalist" fileName="download"/> 
+                                </h:commandLink> 
+                                <p:spacer width="5"/>
+                                <h:commandLink>  
+                                    <p:graphicImage title="XML Download" value="./../resources/images/xml_export.gif" style="border:0;"/>
+                                    <p:dataExporter type="xml" target="datalist" fileName="download"/>
+                                </h:commandLink> 
+                                <p:spacer width="5"/>
+                                <p:commandLink id="createButton" update=":PassengerCreateForm" oncomplete="PF('PassengerCreateDialog').show()" title="New Record" process="@form">  
+                                    <p:graphicImage title="Add New Record" value="./../resources/images/add.png" style="border:0;"/>    
+                                </p:commandLink>   
+                            </div>
+                        </f:facet>
+                                <p:column headerText="S/No">
+                                    <h:outputText value="#{row + 1}" />
+                                </p:column>
+
+                                <p:column headerText="Passport #" sortBy="#{item.passportNumber}" filterBy="#{item.passportNumber}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.passportNumber}"/>
+                                </p:column>
+                                
+                                <p:column headerText="First Name" sortBy="#{item.firstName}" filterBy="#{item.firstName}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.firstName}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Last Name" sortBy="#{item.lastName}" filterBy="#{item.lastName}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.lastName}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Other Name" sortBy="#{item.otherName}" filterBy="#{item.otherName}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.otherName}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Gender" sortBy="#{item.gender}" filterBy="#{item.gender}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.gender}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Date of Birth">
+                                    <h:outputText value="#{item.dateOfBirth}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Phone Number" sortBy="#{item.contactPhoneNumber}" filterBy="#{item.contactPhoneNumber}" filterMatchMode="contains">
+                                    <h:outputText value="#{item.contactPhoneNumber}"/>
+                                </p:column>
+                                
+                                <p:column headerText="Actions" style="width:64px;" exportable="false">
+                                    <p:commandButton update=":PassengerViewForm" oncomplete="PF('PassengerViewDialog').show()" icon="ui-icon-search" title="View">
+                                        <f:setPropertyActionListener value="#{item}" target="#{passengerMBean.selectedPassenger}" />
+                                    </p:commandButton>
+                                     <p:commandButton update=":PassengerEditForm" oncomplete="PF('PassengerEditDialog').show()" icon="ui-icon-pencil" title="Edit">
+                                        <f:setPropertyActionListener value="#{item}" target="#{passengerMBean.selectedPassenger}" />
+                                    </p:commandButton>
+                                </p:column>
+<!--                                <p:column style="width:32px;text-align: center">
+                                     <p:commandButton update=":PassengerEditForm" oncomplete="PF('PassengerEditDialog').show()" icon="ui-icon-pencil" title="Edit">
+                                        <f:setPropertyActionListener value="#{item}" target="#{passengerMBean.selectedPassenger}" />
+                                    </p:commandButton>
+                                </p:column>-->
+                                
+<!--                                <f:facet name="footer">
+                                    <p:commandButton id="createButton" icon="ui-icon-plus"   value="Create" actionListener="#{passengerMBean.prepareCreate}" update=":PassengerCreateForm" oncomplete="PF('PassengerCreateDialog').show()"/>
+                                    <p:commandButton id="viewButton"   icon="ui-icon-search" value="View" update=":PassengerViewForm" oncomplete="PF('PassengerViewDialog').show()" disabled="#{empty passengerMBean.selectedPassenger}"/>
+                                    <p:commandButton id="editButton"   icon="ui-icon-pencil" value="Edit" update=":PassengerEditForm" oncomplete="PF('PassengerEditDialog').show()" disabled="#{empty passengerMBean.selectedPassenger}"/>
+                                    <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="Delete" actionListener="#{passengerMBean.delete}" update=":growl,datalist" disabled="#{empty passengerMBean.selectedPassenger}"/>
+                                </f:facet>-->
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </h:form>
+
+</ui:composition>

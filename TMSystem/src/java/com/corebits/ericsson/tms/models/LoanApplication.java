@@ -39,6 +39,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "LoanApplication.findByDateOfApplication", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApplication = :dateOfApplication"),
     @NamedQuery(name = "LoanApplication.findByApprovedBy", query = "SELECT l FROM LoanApplication l WHERE l.approvedBy = :approvedBy"),
     @NamedQuery(name = "LoanApplication.findByLoanById", query = "SELECT l FROM LoanApplication l WHERE l.loanId = :loanId"),
+    @NamedQuery(name = "LoanApplication.findByLoanStatus", query = "SELECT l FROM LoanApplication l WHERE l.loanStatus IN :loanStatus AND l.memberId = :memberId"),
     @NamedQuery(name = "LoanApplication.findByDateOfApproval", query = "SELECT l FROM LoanApplication l WHERE l.dateOfApproval = :dateOfApproval")})
 public class LoanApplication implements Serializable {
 

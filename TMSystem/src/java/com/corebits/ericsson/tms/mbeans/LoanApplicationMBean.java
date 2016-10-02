@@ -13,7 +13,10 @@ import com.corebits.ericsson.tms.models.LoanRepayment;
 import com.corebits.ericsson.tms.models.LoanType;
 import com.corebits.ericsson.tms.models.StaffMember;
 import com.corebits.ericsson.tms.utils.ApprovalStatusType;
+import com.corebits.ericsson.tms.utils.EmailPurposeType;
 import com.corebits.ericsson.tms.utils.LoanRepaymentStatusType;
+import com.corebits.ericsson.tms.utils.LoanStatusType;
+import com.corebits.ericsson.tms.utils.SendEmail;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -69,6 +73,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     private LoanApplication selectedLoanApplication;
     private List<LoanRepayment> outstandingLoanPaymentList;
     private String loggedOnMemberId;
+    SendEmail send;
     
     
     public LoanApplicationMBean(){        
@@ -86,6 +91,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         selectedLoanApplication = new LoanApplication();
         outstandingLoanPaymentList = new ArrayList<>();
         loggedOnMemberId = this.getMemberId().getMemberId();
+        send = new SendEmail();
     }
     
     public void onChangeLoanType(AjaxBehaviorEvent event){
@@ -148,9 +154,30 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         return UUID.randomUUID().toString().substring(0, 20);
     }
     
+    private boolean isRunningLoan(String memberId, Integer loanType){
+        Map<String, Object> param = new HashMap<>(2);
+        StringJoiner joiner = new StringJoiner(",");
+        joiner.add(LoanStatusType.APPLIED.getKey().toString())
+                .add(LoanStatusType.RUNNING.getKey().toString());
+        param.put("loanStatus", joiner);
+        param.put("memberId", memberId);
+        String query = "SELECT * FROM loan_application WHERE member_id = '" + memberId + "' AND loan_status IN (" + joiner + ") AND loan_type = " + loanType;
+        System.out.println("query ->>>> " + query);
+        List<LoanApplication> application = loanApplicationFacade.findWithNativeQuery(query);
+        //List<LoanApplication> application = loanApplicationFacade.findWithNamedQuery(LoanApplicationController.LOAN_APPLICATION_BY_LOAN_STATUS, param);
+               
+        return (Objects.nonNull(application) && !application.isEmpty());
+    }
+    
     public String apply(){
         Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getApplicationMap();        
         StaffMember member = getMemberId();
+        if(isRunningLoan(member.getMemberId(), payment.getLoanType().getId())){
+            String message = "We are sorry, your request can not be processed because you have an existing running loan. Please contact \"Accounts Department\" for details";
+            JsfUtil.addErrorMessage(message);
+            return "pretty:";
+        }
+        
         map.put("applicant", member);
         LoanApplication loanApplication = new LoanApplication();
         loanApplication.setLoanId(payment.getLoanId());
@@ -168,8 +195,11 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         loanApplication.setApprovalStatus(ApprovalStatusType.PENDING.getKey());
         loanApplication.setLoanTypeDesc(payment.getLoanTypeDesc());
         loanApplication.setLoanSubTypeDesc(payment.getLoanSubTypeDesc());
+        loanApplication.setLoanStatus(LoanStatusType.APPLIED.getKey());
         
-        loanApplicationFacade.create(loanApplication);        
+        loanApplicationFacade.create(loanApplication);    
+        
+        send.SendMail(member.getEmail(), member.getMemberName(), EmailPurposeType.LOAN_APPLICATION);
         
         return "pretty:loan-application-feedback";
     }
@@ -181,6 +211,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         loan.setApprovedBy(member.getMemberName());
         loan.setDateOfApproval(new Date());
         loan.setApprovalStatus(1);
+        loan.setLoanStatus(LoanStatusType.RUNNING.getKey());
         loanApplicationFacade.edit(loan);
         
         //populate the repayment table with the entries        
@@ -205,6 +236,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
         String message = "Loan Application with Loan ID: \""+ loan.getId() + "\" for Member: \"" + loan.getMemberId().getMemberName() + " (" + loan.getMemberId().getMemberId() + ")\" has been successfully approved";
         
         JsfUtil.addSuccessMessage(message);
+        send.SendMail(loan.getMemberId().getEmail(), loan.getMemberId().getMemberName(), EmailPurposeType.LOAN_APPROVAL);
     }
     
     public List<LoanApplication> getMemberLoanApplicationList(){
@@ -218,8 +250,7 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
             return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.FIND_MEMBER_LOAN_APPLICATION, 
                     parameter);
         }else{
-            return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.NAMED_QUERY_FIND_ALL, 
-                parameter);
+            return loanApplicationFacade.findWithNamedQuery(LoanApplicationController.NAMED_QUERY_FIND_ALL);
         }
     }
     

@@ -20,7 +20,8 @@
         <div id="login-wrapper">
             <p:graphicImage name="images/login-logo.png" library="omega-layout" />
             <h:form>
-                <p:growl id="messages" showDetail="true" />
+                <p:growl showSummary="true" id="messages" showDetail="true" />
+                <p:messages showSummary="true" id="msg" showDetail="true" autoUpdate="true"/>                
                 <div id="login-container">
                     <span class="title">TMS</span>
 
@@ -39,9 +40,9 @@
                             <p:link>Forgot Password</p:link>
                         </div>
                         <div class="ui-g-12">
-                            <p:commandButton action="#{authenticate.login()}" 
+                            <p:commandButton action="#{authenticate.login}"
                                              value="Login" 
-                                             update="messages" 
+                                             update="msg,messages" 
                                              icon="fa fa-check" />
                         </div>
                     </div>

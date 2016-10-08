@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="PassengerViewDlg" widgetVar="PassengerViewDialog" modal="true" resizable="false" header="View Passenger Detail">
+
+            <h:form id="PassengerViewForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{passengerMBean.selectedPassenger != null}">
+
+                        <h:outputText value="Passport Number" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.passportNumber}" title="Passport Number" />
+
+                        <h:outputText value="First Name" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.firstName}" title="First Name" />
+
+                        <h:outputText value="Last Name"/>
+                        <h:outputText value="#{passengerMBean.selectedPassenger.lastName}" title="Last Name" />
+                        
+                        <h:outputText value="Other Name" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.otherName}" title="Other Name" />
+                        
+                        <h:outputText value="Gender" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.gender}" title="Gender" />                        
+                        
+                         <h:outputText value="Date of Birth"/>
+                         <h:outputText value="#{passengerMBean.selectedPassenger.dateOfBirth}" >
+                             <f:convertDateTime pattern="yyyy-MM-dd" />
+                         </h:outputText>
+                        
+                        <h:outputText value="Home Address"/>
+                        <h:outputText value="#{passengerMBean.selectedPassenger.homeAddress}" title="Home Address" />
+                        
+                        <h:outputText value="Contact Phone Number" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.contactPhoneNumber}" title="Contact Phone Number" />
+                        
+                        <h:outputText value="Next of Kin" />
+                        <h:outputText value="#{passengerMBean.selectedPassenger.nextOfKin}" title="Next of Kin" />
+                        
+                    </p:panelGrid>
+                    <p:commandButton value="Close" onclick="PassengerViewDialog.hide()" ajax="false"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

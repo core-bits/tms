@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Manage Transaction</ui:define>
+    <ui:define name="content">
+        <f:view>
+            <h:form id="indeform">                
+                <p:growl id="messages" showDetail="true" />
+                <div class="card">
+                    <h:panelGrid columns="4" id="panelDetails" cellspacing="2px">
+                        <h:outputLabel value="Transaction Type" for="transType" style="font-weight:bold" />
+                        <p:selectOneMenu id="transType" value="#{transaction.credebit}" title="Transaction Type" >
+                            <f:selectItem itemValue="" itemLabel="--Select One--"/>
+                            <f:selectItem itemValue="DR" itemLabel="DEBIT"/>
+                            <f:selectItem itemValue="CR" itemLabel="CREDIT"/>
+                        </p:selectOneMenu>
+                        
+                        <h:outputLabel value="Operation" for="operate" style="font-weight:bold" />
+                        <p:selectOneMenu id="operate" value="#{transaction.operation}" title="Operations" >
+                            <f:selectItems value="#{transaction.operations}" var="operate" 
+                                           itemValue="#{operate.operationName}" 
+                                           itemLabel="#{operate.operationName}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Transaction Amount" for="newTypeName" style="font-weight:bold" />
+                        <p:inputNumber id="newTypeName" value="#{transaction.amount}" 
+                                       title="Transaction amount" 
+                                       required="true"
+                                       requiredMessage="Please enter a valid account type name"/>
+                        
+
+                        <h:outputLabel value="Account Number" for="acct" style="font-weight:bold" />
+                        <p:selectOneMenu id="acct" value="#{transaction.account}" title="Account Number" >
+                            <f:selectItems value="#{accounts.accounts}" var="acct" 
+                                           itemValue="#{acct.accountNumber}" 
+                                           itemLabel="#{acct.accountName}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputLabel value="Transaction Description" for="typeDescription" style="font-weight:bold" />
+                        <p:inputTextarea id="typeDescription" value="#{transaction.note}" 
+                                         title="Transaction description"
+                                         required="true"
+                                         requiredMessage="Transaction Description is required" />
+
+                    </h:panelGrid>  
+                    <p:commandButton style="margin-top: 10px; width: 120px; height: 40px" 
+                                     id="saveBtu" 
+                                     value="Post" 
+                                     update="messages, :indeform:acctTypeId"
+                                     action="#{transaction.postTransaction()}"/>
+                </div>
+
+                <div class="card">
+                    <p:dataTable id="acctTypeId" rowIndexVar="row" var="acct" value="#{transaction.journals}" 
+                                 paginator="true" rows="10">
+                        <p:column headerText="S/No">
+                            <h:outputText value="#{row + 1}" />
+                        </p:column>
+                        <p:column headerText="Account" sortBy="#{acct.account.accountName}" sortable="true"
+                                  filterBy="#{acct.account.accountName}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.account.accountName}" />
+                        </p:column>
+
+                        <p:column headerText="Credit" sortBy="#{acct.credit}"  sortable="true"
+                                  filterBy="#{acct.credit}" filterMatchMode="contains">
+                            <h:outputText style="float: right" value="#{acct.credit}" />
+                        </p:column>
+
+                        <p:column headerText="Debit" sortBy="#{acct.debit}"  sortable="true"
+                                  filterBy="#{acct.debit}" filterMatchMode="contains">
+                            <h:outputText style="float: right" value="#{acct.debit}" />
+                        </p:column>
+                        
+                        <p:column headerText="Balance" sortBy="#{acct.balance}"  sortable="true"
+                                  filterBy="#{acct.balance}" filterMatchMode="contains">
+                            <h:outputText style="float: right" value="#{acct.balance}" />
+                        </p:column>
+                        
+                        <p:column headerText="Narration" sortBy="#{acct.note}"  sortable="true"
+                                  filterBy="#{acct.note}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.note}" />
+                        </p:column>
+                        
+                        <p:column headerText="Date of Action" sortBy="#{acct.actualDate}"  sortable="true"
+                                  filterBy="#{acct.actualDate}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.actualDate}" >
+                                <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </f:view>
+    </ui:define>
+
+</ui:composition>

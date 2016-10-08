@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Manage Operations</ui:define>
+    <ui:define name="content">
+        <f:view>
+            <h:form id="opeform">                
+                <p:growl id="messages" showDetail="true" />
+                <div class="card">
+                    <h:panelGrid columns="4" id="panelDetails" cellspacing="2px">
+                        
+                        <h:outputLabel value="Operation Name" for="opName" style="font-weight:bold" />
+                        <p:inputText id="opName" value="#{operations.name}" 
+                                         title="Operation Name"
+                                         required="true"
+                                         requiredMessage="Operation Name is required" />
+
+                        <h:outputLabel value="Operation Description" for="opDescription" style="font-weight:bold" />
+                        <p:inputTextarea id="opDescription" value="#{operations.descriptions}" 
+                                         title="Operation description"
+                                         required="true"
+                                         requiredMessage="Operation Description is required" />
+
+                    </h:panelGrid>  
+                    <p:commandButton style="margin-top: 10px; width: 120px; height: 40px" 
+                                     id="saveBtu" 
+                                     value="Post" 
+                                     update="messages, :opeform:acctTypeId"
+                                     action="#{operations.createOperation()}"/>
+                </div>
+
+                <div class="card">
+                    <p:dataTable id="acctTypeId" rowIndexVar="row" var="operate" value="#{operations.operations}" 
+                                 paginator="true" rows="10">
+                        <p:column headerText="S/No">
+                            <h:outputText value="#{row + 1}" />
+                        </p:column>
+                        <p:column headerText="Name" sortBy="#{operate.operationName}" sortable="true"
+                                  filterBy="#{operate.operationName}" filterMatchMode="contains">
+                            <h:outputText value="#{operate.operationName}" />
+                        </p:column>
+
+                        <p:column headerText="Description" sortBy="#{operate.operationDescription}"  sortable="true"
+                                  filterBy="#{operate.operationDescription}" filterMatchMode="contains">
+                            <h:outputText style="float: right" value="#{operate.operationDescription}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </f:view>
+    </ui:define>
+
+</ui:composition>

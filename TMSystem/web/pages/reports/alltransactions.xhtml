@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Report</ui:define>
+
+    <ui:define name="content">    
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" showSummary="true"/> 
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <p:dataTable id="transa" var="txn" value="#{reports.allTransactions}" paginator="true" rows="10">
+
+                            <p:column headerText="Operation" sortBy="#{txn.journalOperation}" sortable="true"
+                                      filterBy="#{txn.journalOperation}" filterMatchMode="contains">
+                                <h:outputText value="#{txn.journalOperation eq null?'Others':txn.journalOperation}" />
+                            </p:column>
+
+                            <p:column headerText="Account" sortBy="#{txn.account.accountName}"  sortable="true"
+                                      filterBy="#{txn.account.accountName}" filterMatchMode="contains">
+                                <h:outputText value="#{txn.account.accountName}" />
+                            </p:column>
+
+                            <p:column headerText="Credit">
+                                <h:outputText style="float: right" value="#{txn.credit}" />
+                            </p:column>
+
+                            <p:column headerText="Debit">
+                                <h:outputText style="float: right" value="#{txn.debit}" />
+                            </p:column>
+
+                            <p:column headerText="Balance">
+                                <h:outputText style="float: right" value="#{txn.balance}" />
+                            </p:column>
+
+                            <p:column headerText="Narration">
+                                <h:outputText value="#{txn.note}" />
+                            </p:column>
+
+                            <p:column headerText="Date of Action">
+                                <h:outputText value="#{txn.actualDate}">
+                                    <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

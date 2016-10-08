@@ -2,21 +2,31 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
-
-    <ui:define name="title">Loan Application List</ui:define>
-
-    <ui:define name="content">
+                xmlns:p="http://primefaces.org/ui">
+        <p:growl id="growl" life="20000"/>
         <h:form prependId="false">
             <div class="ui-fluid">
                 <div class="ui-g">
                     <div class="ui-g-12">
                         <div class="card">
                             <h1>Loan Application List</h1>
-                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
+                            <p:dataTable id="repayment" rowIndexVar="row" 
+                                         rendered="#{not empty loanApplicationMBean.memberLoanApplicationList}" 
+                                         var="item" value="#{loanApplicationMBean.memberLoanApplicationList}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
+                                </p:column>
+                                
+                                <p:column headerText="Loan ID">
+                                    <h:outputText value="#{item.loanId}" />
+                                </p:column>
+                                
+                                <p:column headerText="Member ID">
+                                    <h:outputText value="#{item.memberId.memberId}" />
+                                </p:column>
+                                
+                                <p:column headerText="Member Name">
+                                    <h:outputText value="#{item.memberId.memberName}" />
                                 </p:column>
 
                                 <p:column headerText="Loan Amount">
@@ -61,6 +71,50 @@
                                 <p:column headerText="Approval Status">
                                     <h:outputText value="#{item.approvalStatus eq 1 ? 'Approved' : 'Awaiting Approval'}"/>
                                 </p:column>
+                                <p:column headerText="Action" style="width:32px;text-align: center">
+                                    <p:commandButton rendered="#{loanApplicationMBean.canView(item.approvalStatus, item.memberId.memberId)}" 
+                                                     actionListener="#{loanApplicationMBean.loadRepaymentEntries(item)}" update="@form" icon="ui-icon-search"
+                                                     title="View Outstanding Payment">
+                                        <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
+                                   </p:commandButton>
+                                    <p:commandButton rendered="#{loanApplicationMBean.canApprove(item.approvalStatus, item.memberId.memberId)}" 
+                                                     actionListener="#{loanApplicationMBean.approveLoan(item)}" update="outstanding,repayment,:growl" 
+                                                     icon="fa fa-fw fa-edit" title="Approve Loan">
+                                        <f:setPropertyActionListener value="#{item}" target="#{loanApplicationMBean.selectedLoanApplication}" />
+                                   </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        
+                        <div class="card">
+                            <h1>Outstanding Repayment</h1>
+                            <p:dataTable  id="outstanding" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.outstandingLoanPaymentList}"
+                                          var="repayment" value="#{loanApplicationMBean.outstandingLoanPaymentList}" reflow="true">
+                                <p:column headerText="S/No">
+                                    <h:outputText value="#{row + 1}" />
+                                </p:column>
+                                
+                                <p:column headerText="Loan ID">
+                                    <h:outputText value="#{repayment.loanId.loanId}" />
+                                </p:column>
+                                
+                                <p:column headerText="Member ID">
+                                    <h:outputText value="#{repayment.memberId}" />
+                                </p:column>
+                                <p:column headerText="Member Name">
+                                    <h:outputText value="#{repayment.loanId.memberId.memberName}" />
+                                </p:column>                                
+
+                                <p:column headerText="Amount Due">
+                                    <h:outputText style="float: right" value="#{repayment.repaymentAmount}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Due Date">
+                                    <h:outputText value="#{repayment.repaymentPeriod}"/>
+                                </p:column>
+                                
                             </p:dataTable>
                         </div>
                     </div>
@@ -69,6 +123,5 @@
                 </div>
             </div>
         </h:form>
-    </ui:define>
 
 </ui:composition>

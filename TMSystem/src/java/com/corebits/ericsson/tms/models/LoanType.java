@@ -2,7 +2,6 @@
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -49,7 +48,7 @@ public class LoanType implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "maximum_amount")
-    private BigDecimal maximumAmount;
+    private double maximumAmount;
     @Basic(optional = false)
     @NotNull
     @Column(name = "maximum_tenure")
@@ -122,11 +121,11 @@ public class LoanType implements Serializable {
         return "com.corebits.ericsson.models.LoanType[ id=" + id + " ]";
     }
 
-    public BigDecimal getMaximumAmount() {
+    public double getMaximumAmount() {
         return maximumAmount;
     }
 
-    public void setMaximumAmount(BigDecimal maximumAmount) {
+    public void setMaximumAmount(double maximumAmount) {
         this.maximumAmount = maximumAmount;
     }
 

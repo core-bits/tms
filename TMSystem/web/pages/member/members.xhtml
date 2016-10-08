@@ -2,6 +2,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:o="http://omnifaces.org/ui"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
@@ -9,25 +10,45 @@
 
     <ui:define name="content">    
         <h:form id="form">
+            <p:growl id="messages" showDetail="true" showSummary="true"/> 
             <div class="ui-g">
                 <div class="ui-g-12">
                     <div class="card">
-                        <p:dataTable var="mem" value="#{member.membersAll}" paginator="true" rows="10">
+                        <p:dataTable id="memDetails" var="mem" value="#{member.membersAll}" paginator="true" rows="10">
 
-                            <p:column headerText="Member Id" sortBy="#{mem.memberId}">
+                            <p:column headerText="Member Id" sortBy="#{mem.memberId}" sortable="true"
+                                      filterBy="#{mem.memberId}" filterMatchMode="contains">
                                 <h:outputText value="#{mem.memberId}" />
                             </p:column>
 
-                            <p:column headerText="Member Name" sortBy="#{mem.memberName}">
+                            <p:column headerText="Member Name" sortBy="#{mem.memberName}"  sortable="true"
+                                      filterBy="#{mem.memberName}" filterMatchMode="contains">
                                 <h:outputText value="#{mem.memberName}" />
                             </p:column>
 
-                            <p:column headerText="Department" sortBy="#{mem.department.departmentName}">
+                            <p:column headerText="Department" sortBy="#{mem.department.departmentName}"  sortable="true"
+                                      filterBy="#{mem.department.departmentName}" filterMatchMode="contains">
                                 <h:outputText value="#{mem.department.departmentName}" />
                             </p:column>
 
-                            <p:column headerText="Mobile" sortBy="#{mem.mobileNumber}">
+                            <p:column headerText="Mobile" sortBy="#{mem.mobileNumber}"  sortable="true"
+                                      filterBy="#{mem.mobileNumber}" filterMatchMode="contains">
                                 <h:outputText value="#{mem.mobileNumber}" />
+                            </p:column>
+                            
+                            <p:column headerText="Reg. Status" sortBy="#{mem.registrationStatus eq 0?'Pending':'Active'}"  sortable="true"
+                                      filterBy="#{mem.registrationStatus  eq 0?'Pending':'Active'}" filterMatchMode="contains">
+                                <h:outputText value="#{mem.registrationStatus eq 0?'Pending':'Active'}" />
+                            </p:column>
+                            
+                            <p:column headerText="Sec. Approval" sortBy="#{mem.secretaryApprovalStatus eq 0?'Pending':'Approve'}"  sortable="true"
+                                      filterBy="#{mem.secretaryApprovalStatus eq 0?'Pending':'Approve'}" filterMatchMode="contains">
+                                <h:outputText value="#{mem.secretaryApprovalStatus eq 0?'Pending':'Approve'}" />
+                            </p:column>
+                            
+                            <p:column headerText="Pres. Approval" sortBy="#{mem.presidentApprovalStatus eq 0?'Pending':'Approve'}" sortable="true" 
+                                      filterBy="#{mem.presidentApprovalStatus eq 0?'Pending':'Approve'}" filterMatchMode="contains">
+                                <h:outputText value="#{mem.secretaryApprovalStatus eq 0?'Pending':'Approve'}" />
                             </p:column>
                             <p:column style="width:32px;text-align: center">
                                 <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" 
@@ -41,20 +62,46 @@
             </div>
             <p:dialog header="Staff Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="carDetail" style="text-align:left;">
-                    <h:panelGrid  columns="2" columnClasses="label,value">
+                    <table>
+                        <tr>
+                            <td>
+                                <p:commandButton style="width: 100px; height: 30px" 
+                                                 value="Approve" 
+                                                 update="form:messages, :form:memDetails"
+                                                 oncomplete="PF('carDialog').hide()"
+                                                 actionListener="#{member.activateMemeber()}">
+                                    <f:param name="approve" value="#{member.member.memberId}"/>
+                                </p:commandButton>
+                                <p:commandButton style="width: 100px; height: 30px" 
+                                                 value="Disable" 
+                                                 update="form:messages, :form:memDetails"
+                                                 oncomplete="PF('carDialog').hide()"
+                                                 actionListener="#{member.deActivateMemeber()}">
+                                    <f:param name="disable" value="#{member.member.memberId}"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h:panelGrid  columns="2" columnClasses="label,value">
+                                    <h:outputText value="Member Id:" />
+                                    <h:outputText value="#{member.member.memberId}" />
 
-                        <h:outputText value="Member Id:" />
-                        <h:outputText value="#{member.member.memberId}" />
+                                    <h:outputText value="Member Name:" />
+                                    <h:outputText value="#{member.member.memberName}" />
 
-                        <h:outputText value="Member Name:" />
-                        <h:outputText value="#{member.member.memberName}" />
+                                    <h:outputText value="Department:" />
+                                    <h:outputText value="#{member.member.department.departmentName}"/>
 
-                        <h:outputText value="Department:" />
-                        <h:outputText value="#{member.member.department.departmentName}"/>
-
-                        <h:outputText value="Mobile" />
-                        <h:outputText value="#{member.member.mobileNumber}" />
-                    </h:panelGrid>
+                                    <h:outputText value="Mobile" />
+                                    <h:outputText value="#{member.member.mobileNumber}" />
+                                </h:panelGrid>
+                            </td>
+                            <td style="vertical-align: top; border: #000000">
+                                No Photo to display
+                            </td>
+                        </tr>
+                    </table>
                 </p:outputPanel>
             </p:dialog>
         </h:form>

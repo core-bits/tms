@@ -15,12 +15,13 @@
         <title>PrimeFaces Omega</title>
         <h:outputScript name="js/nanoscroller.js" library="omega-layout" />
         <h:outputScript name="js/layout.js" library="omega-layout" />
+        <h:outputScript name="pfcrud.js" library="scripts" />
 
         <ui:insert name="head"/>
     </h:head>
 
     <h:body styleClass="main-body">
-
+        <p:messages id="messagesID" showDetail="true" />
         <div class="wrapper">
             <ui:include src="topbar.xhtml" />
 

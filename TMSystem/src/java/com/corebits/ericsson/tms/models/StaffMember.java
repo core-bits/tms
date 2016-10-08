@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "member")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "StaffMember.findAll", query = "SELECT m FROM StaffMember m"),
+    @NamedQuery(name = "StaffMember.findAll", query = "SELECT m FROM StaffMember m ORDER BY m.id DESC"),
     @NamedQuery(name = "StaffMember.findById", query = "SELECT m FROM StaffMember m WHERE m.id = :id"),
     @NamedQuery(name = "StaffMember.findByMemberId", query = "SELECT m FROM StaffMember m WHERE m.memberId = :memberId"),
     @NamedQuery(name = "StaffMember.findByMemberName", query = "SELECT m FROM StaffMember m WHERE m.memberName = :memberName"),
@@ -62,7 +62,21 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "StaffMember.findByPresidentApprovalStatus", query = "SELECT m FROM StaffMember m WHERE m.presidentApprovalStatus = :presidentApprovalStatus")})
 public class StaffMember implements Serializable {
 
-    
+    @Lob
+    @Column(name = "witness_signature")
+    private byte[] witnessSignature;
+    @Lob
+    @Column(name = "applicant_signature")
+    private byte[] applicantSignature;
+    @Lob
+    @Column(name = "secretary_signature")
+    private byte[] secretarySignature;
+    @Lob
+    @Column(name = "president_signature")
+    private byte[] presidentSignature;
+    @Lob
+    @Column(name = "member_photo")
+    private byte[] memberPhoto;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -147,18 +161,10 @@ public class StaffMember implements Serializable {
     private Date presidentApprovalDate;
     @Column(name = "president_approval_status")    
     private Short presidentApprovalStatus;    
-    @Lob
-    @Column(name = "witness_signature")
-    private byte[] witnessSignature;
-    @Lob
-    @Column(name = "applicant_signature")
-    private byte[] applicantSignature;
-    @Lob
-    @Column(name = "secretary_signature")
-    private byte[] secretarySignature;
-    @Lob
-    @Column(name = "president_signature")
-    private byte[] presidentSignature;
+    
+    @Column(name = "registration_status")
+    private Short registrationStatus;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "memberId")
     private List<LoanApplication> loanApplicationList;
     @JoinColumn(name = "buisness_unit", referencedColumnName = "id")
@@ -491,5 +497,24 @@ public class StaffMember implements Serializable {
     public void setLoanApplicationList(List<LoanApplication> loanApplicationList) {
         this.loanApplicationList = loanApplicationList;
     }
+
+
+    public byte[] getMemberPhoto() {
+        return memberPhoto;
+    }
+
+    public void setMemberPhoto(byte[] memberPhoto) {
+        this.memberPhoto = memberPhoto;
+    }
+
+    public Short getRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public void setRegistrationStatus(Short registrationStatus) {
+        this.registrationStatus = registrationStatus;
+    }
+
+    
     
 }

@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .grid-pad .ui-panelgrid-content .ui-panelgrid-cell.ui-grid-col-12 {
+                padding-bottom: 10px;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">Manage Accounts</ui:define>
+    <ui:define name="content">
+        <f:view>
+            <h:form id="indeform">                
+                <p:growl id="messages" showDetail="true" />
+                <div class="card">
+                    <h:panelGrid columns="4" id="panelDetails" cellspacing="2px">
+                        <h:outputLabel value="Account Number" for="newTypeCode" style="font-weight:bold" />
+                        <p:inputText id="newTypeCode" value="#{accounts.accountNumber}" 
+                                     title="New Account Number" 
+                                     required="true"
+                                     requiredMessage="Please enter a valid account type code"/>
+
+                        <h:outputLabel value="Account Name" for="newTypeName" style="font-weight:bold" />
+                        <p:inputText id="newTypeName" value="#{accounts.accountName}" 
+                                     title="New Account Name" 
+                                     required="true"
+                                     requiredMessage="Please enter a valid account name"/>
+                        
+                        <h:outputLabel value="Account Amount" for="newTypeAmount" style="font-weight:bold" />
+                        <p:inputNumber id="newTypeAmount" value="#{accounts.accountAmount}" 
+                                     title="New Account Amount" 
+                                     required="true"
+                                     requiredMessage="Please enter a valid account amouny"/>
+
+                        <h:outputLabel value="Account Type" for="acctType" style="font-weight:bold" />
+                        <p:selectOneMenu id="acctType" value="#{accounts.acctTypeCode}" title="Account Type" >
+                            <f:selectItems value="#{accounts.accountTypes}" var="acctType" 
+                                           itemValue="#{acctType.accountTypeCode}" 
+                                           itemLabel="#{acctType.name}"/>
+                        </p:selectOneMenu>
+                        
+                        <h:outputLabel value="Account Description" for="typeDescription" style="font-weight:bold" />
+                        <p:inputTextarea id="typeDescription" value="#{accounts.description}" 
+                                         title="Account description"
+                                         required="true"
+                                         requiredMessage="Account description does not accept empty value" />
+
+                    </h:panelGrid>  
+                    <p:commandButton style="margin-top: 10px; width: 120px; height: 40px" 
+                                     id="saveBtu" 
+                                     value="Create" 
+                                     update="messages, :indeform:acctTypeId"
+                                     action="#{accounts.createAccounts()}"/>
+                </div>
+
+                <div class="card">
+                    <p:dataTable id="acctTypeId" rowIndexVar="row" var="acct" value="#{accounts.accounts}" 
+                                 paginator="true" rows="10">
+                        <p:column headerText="S/No">
+                            <h:outputText value="#{row + 1}" />
+                        </p:column>
+                        <p:column headerText="Account Name" sortBy="#{acct.accountName}" sortable="true"
+                                  filterBy="#{acct.accountName}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.accountName}" />
+                        </p:column>
+
+                        <p:column headerText="Account Number" sortBy="#{acct.accountNumber}"  sortable="true"
+                                  filterBy="#{acct.accountNumber}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.accountNumber}" />
+                        </p:column>
+                        
+                        <p:column headerText="Balance" sortBy="#{acct.accountBalance}"  sortable="true"
+                                  filterBy="#{acct.accountBalance}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.accountBalance}" />
+                        </p:column>
+                        
+                        <p:column headerText="Account Type" sortBy="#{acct.accountType.name}"  sortable="true"
+                                  filterBy="#{acct.accountType.name}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.accountType.name}" />
+                        </p:column>
+
+                        <p:column headerText="Description" sortBy="#{acct.description}"  sortable="true"
+                                  filterBy="#{acct.description}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.description}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </f:view>
+    </ui:define>
+
+</ui:composition>

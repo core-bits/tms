@@ -1,6 +1,5 @@
 package com.corebits.ericsson.tms.models;
 
-import java.math.BigDecimal;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -12,7 +11,7 @@ public abstract class LoanType_ {
 
 	public static volatile SingularAttribute<LoanType, String> loanName;
 	public static volatile SingularAttribute<LoanType, Integer> maximumTenure;
-	public static volatile SingularAttribute<LoanType, BigDecimal> maximumAmount;
+	public static volatile SingularAttribute<LoanType, Double> maximumAmount;
 	public static volatile SingularAttribute<LoanType, String> loanDescription;
 	public static volatile ListAttribute<LoanType, LoanAllocationGuidelines> loanAllocationGuidelinesList;
 	public static volatile SingularAttribute<LoanType, Integer> id;

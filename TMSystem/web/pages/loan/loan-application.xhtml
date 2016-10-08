@@ -14,7 +14,7 @@
                     <div class="ui-g-12">
                         <div class="card">
                             <h1>Loan Calculator</h1>
-                            <p:messages showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:messages autoUpdate="true" closable="true"/>
                             <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank" style="border:0px none; background-color:transparent;">
                                 <p:outputLabel for="loanType" value="Loan Type"/>
                                 <p:selectOneMenu id="loanType" value="#{loanApplicationMBean.loanType}">
@@ -29,10 +29,10 @@
                                 <p:inputNumber readonly="#{empty loanApplicationMBean.loanType}" emptyValue="0" autocomplete="off" minValue="0" maxValue="#{loanApplicationMBean.maxLoanAmount}" value="#{loanApplicationMBean.loanAmount}" id="loanAmount">
                                         <p:ajax process="loanAmount" event="valueChange" listener="#{loanApplicationMBean.loanAmountInputControl}" update="@form"  /> 
                                 </p:inputNumber>
-                                <h:outputLabel rendered="#{loanApplicationMBean.maxLoanAmount gt 0}"  value="Please note: Maximum amount permissible for #{loanApplicationMBean.loanType.loanDescription} is #{loanApplicationMBean.maxLoanAmount}" style="color:green; font-style: italic"/> 
+                                <h:outputLabel rendered="#{loanApplicationMBean.maxLoanAmount gt 0}"  value="Please note: Maximum amount permissible for #{loanApplicationMBean.loanType.loanDescription} is #{loanApplicationMBean.maxLoanFormatted}" style="color:green; font-style: italic"/> 
                                 <p:spacer rendered="#{loanApplicationMBean.maxLoanAmount eq 0}" />
                                 
-                                <p:outputLabel for="noOfPayment" value="No of Payments"/>
+                                <p:outputLabel for="noOfPayment" value="Number of Months"/>
                                 <p:inputNumber readonly="#{empty loanApplicationMBean.loanType}" emptyValue="0" autocomplete="off" minValue="0" maxValue="#{loanApplicationMBean.maxTenure}" value="#{loanApplicationMBean.numberOfPayment}" id="noOfPayment">
                                         <p:ajax process="noOfPayment" event="valueChange" listener="#{loanApplicationMBean.tenureInputControl}" update="@form" /> 
                                 </p:inputNumber>
@@ -65,13 +65,15 @@
                         
                         <div class="card">
                             <h1>Repayment Breakdown</h1>
-                            <p:dataTable  id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" var="entry" value="#{loanApplicationMBean.payment.repaymentEntry}" reflow="true">
+                            <p:dataTable id="repayment" rowIndexVar="row" rendered="#{not empty loanApplicationMBean.payment.repaymentEntry}" var="entry" value="#{loanApplicationMBean.payment.repaymentEntry}" reflow="true">
                                 <p:column headerText="S/No">
                                     <h:outputText value="#{row + 1}" />
                                 </p:column>
 
                                 <p:column headerText="Payment Date">
-                                    <h:outputText value="#{entry.paymentDate}" />
+                                    <h:outputText value="#{entry.paymentDate}" >
+                                        <f:convertDateTime type="date"/>
+                                    </h:outputText>
                                 </p:column>
 
                                 <p:column headerText="Beginning Balance">

@@ -2,25 +2,25 @@
 package com.corebits.ericsson.tms.dao;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
  * @author xtphere
  */
 public class RepaymentEntryDAO  implements Serializable{
-    private String paymentDate;
-    private BigDecimal beginingBalance;
-    private BigDecimal monthlyPayment;
-    private BigDecimal principal;
-    private BigDecimal interest;
-    private BigDecimal endinBalance;   
+    private Date paymentDate;
+    private double beginingBalance;
+    private double monthlyPayment;
+    private double principal;
+    private double interest;
+    private double endinBalance;   
     
     public RepaymentEntryDAO(){        
     }
 
-    public RepaymentEntryDAO(String paymentDate, BigDecimal beginingBalance, BigDecimal monthlyPayment, BigDecimal principal, 
-            BigDecimal interest, BigDecimal endinBalance) {
+    public RepaymentEntryDAO(Date paymentDate, double beginingBalance, double monthlyPayment, double principal, 
+            double interest, double endinBalance) {
         this.paymentDate = paymentDate;
         this.beginingBalance = beginingBalance;
         this.monthlyPayment = monthlyPayment;
@@ -29,51 +29,51 @@ public class RepaymentEntryDAO  implements Serializable{
         this.endinBalance = endinBalance;
     }
     
-    public String getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    public BigDecimal getBeginingBalance() {
+    public double getBeginingBalance() {
         return beginingBalance;
     }
 
-    public void setBeginingBalance(BigDecimal beginingBalance) {
+    public void setBeginingBalance(double beginingBalance) {
         this.beginingBalance = beginingBalance;
     }
 
-    public BigDecimal getMonthlyPayment() {
+    public double getMonthlyPayment() {
         return monthlyPayment;
     }
 
-    public void setMonthlyPayment(BigDecimal monthlyPayment) {
+    public void setMonthlyPayment(double monthlyPayment) {
         this.monthlyPayment = monthlyPayment;
     }
 
-    public BigDecimal getPrincipal() {
+    public double getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(BigDecimal principal) {
+    public void setPrincipal(double principal) {
         this.principal = principal;
     }
 
-    public BigDecimal getInterest() {
+    public double getInterest() {
         return interest;
     }
 
-    public void setInterest(BigDecimal interest) {
+    public void setInterest(double interest) {
         this.interest = interest;
     }
 
-    public BigDecimal getEndinBalance() {
+    public double getEndinBalance() {
         return endinBalance;
     }
 
-    public void setEndinBalance(BigDecimal endinBalance) {
+    public void setEndinBalance(double endinBalance) {
         this.endinBalance = endinBalance;
     }
 

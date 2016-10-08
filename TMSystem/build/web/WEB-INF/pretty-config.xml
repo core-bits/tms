@@ -48,11 +48,11 @@
     </url-mapping> 
     <url-mapping id="loan-application-feedback">
         <pattern value="/loan-application-feedback/" />
-        <view-id value="/faces/loan-application-list.xhtml"/>
+        <view-id value="/faces/pages/loan/feedback.xhtml"/>
     </url-mapping>
      <url-mapping id="loan-application-list">
         <pattern value="/loan-application-list/" />
-        <view-id value="/faces/loan-application-list.xhtml"/>
+        <view-id value="/faces/pages/loan/index.xhtml"/>
     </url-mapping>   
     <url-mapping id="members">
         <pattern value="/members/" />
@@ -61,5 +61,9 @@
     <url-mapping id="modifycontribution">
         <pattern value="/modifycontribution/" />
         <view-id value="/faces/pages/contribution/modifyContribution.xhtml"/>
+    </url-mapping>     
+    <url-mapping id="viewcontribution">
+        <pattern value="/view/" />
+        <view-id value="/faces/pages/contribution/viewContribution.xhtml"/>
     </url-mapping>
 </pretty-config>

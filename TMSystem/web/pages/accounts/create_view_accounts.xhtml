@@ -30,6 +30,12 @@
                                      title="New Account Name" 
                                      required="true"
                                      requiredMessage="Please enter a valid account name"/>
+                        
+                        <h:outputLabel value="Account Amount" for="newTypeAmount" style="font-weight:bold" />
+                        <p:inputNumber id="newTypeAmount" value="#{accounts.accountAmount}" 
+                                     title="New Account Amount" 
+                                     required="true"
+                                     requiredMessage="Please enter a valid account amouny"/>
 
                         <h:outputLabel value="Account Type" for="acctType" style="font-weight:bold" />
                         <p:selectOneMenu id="acctType" value="#{accounts.acctTypeCode}" title="Account Type" >
@@ -66,6 +72,11 @@
                         <p:column headerText="Account Number" sortBy="#{acct.accountNumber}"  sortable="true"
                                   filterBy="#{acct.accountNumber}" filterMatchMode="contains">
                             <h:outputText value="#{acct.accountNumber}" />
+                        </p:column>
+                        
+                        <p:column headerText="Balance" sortBy="#{acct.accountBalance}"  sortable="true"
+                                  filterBy="#{acct.accountBalance}" filterMatchMode="contains">
+                            <h:outputText value="#{acct.accountBalance}" />
                         </p:column>
                         
                         <p:column headerText="Account Type" sortBy="#{acct.accountType.name}"  sortable="true"

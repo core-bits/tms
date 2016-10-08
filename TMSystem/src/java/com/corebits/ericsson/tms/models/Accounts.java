@@ -35,6 +35,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Accounts.findByDescription", query = "SELECT a FROM Accounts a WHERE a.description = :description")})
 public class Accounts implements Serializable {
 
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "account_balance")
+    private Double accountBalance;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -135,5 +139,14 @@ public class Accounts implements Serializable {
     public void setJournalList(List<Journal> journalList) {
         this.journalList = journalList;
     }
+
+    public Double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(Double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
 
 }

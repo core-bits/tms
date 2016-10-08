@@ -1,4 +1,3 @@
-
 package com.corebits.ericsson.tms.models;
 
 import java.io.Serializable;
@@ -37,6 +36,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Journal.findByAccount", query = "SELECT j FROM Journal j WHERE j.account = :account")})
 public class Journal implements Serializable {
 
+    @Column(name = "balance")
+    private Double balance;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,13 +64,16 @@ public class Journal implements Serializable {
     @Size(max = 45)
     @Column(name = "note")
     private String note;
+    @Size(max = 45)
+    @Column(name = "journal_operation")
+    private String JournalOperation;
     @Column(name = "actual_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualDate;
     @JoinColumn(name = "account", referencedColumnName = "id")
     @ManyToOne
     private Accounts account;
-    
+
     public Journal() {
     }
 
@@ -140,6 +145,14 @@ public class Journal implements Serializable {
         this.note = note;
     }
 
+    public String getJournalOperation() {
+        return JournalOperation;
+    }
+
+    public void setJournalOperation(String JournalOperation) {
+        this.JournalOperation = JournalOperation;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -180,5 +193,13 @@ public class Journal implements Serializable {
     public void setAccount(Accounts account) {
         this.account = account;
     }
-    
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
 }

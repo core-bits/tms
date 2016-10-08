@@ -34,6 +34,7 @@ public class AccountsMbeans implements Serializable {
     
     private String accountNumber;
     private String accountName;
+    private String accountAmount;
     private String description;
     
     List<AccountType> accountTypes;
@@ -100,6 +101,7 @@ public class AccountsMbeans implements Serializable {
             acct.setAccountName(accountName);
             acct.setAccountNumber(accountNumber);
             acct.setDescription(description);
+            acct.setAccountBalance(Double.valueOf(accountAmount));
             ac.createAccounts(acct);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Alert", "Completed Successfully");
         } catch (Exception e) {
@@ -172,6 +174,14 @@ public class AccountsMbeans implements Serializable {
 
     public void setAccounts(List<Accounts> accounts) {
         this.accounts = accounts;
+    }
+
+    public String getAccountAmount() {
+        return accountAmount;
+    }
+
+    public void setAccountAmount(String accountAmount) {
+        this.accountAmount = accountAmount;
     }
 
 }

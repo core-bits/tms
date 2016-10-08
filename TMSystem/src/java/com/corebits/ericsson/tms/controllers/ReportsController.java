@@ -6,7 +6,6 @@
 package com.corebits.ericsson.tms.controllers;
 
 import com.corebits.ericsson.tms.models.Journal;
-import com.corebits.ericsson.tms.models.Operations;
 import com.corebits.ericsson.tms.utils.Utility;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,40 +20,26 @@ import javax.persistence.PersistenceContext;
  * @author Tommy
  */
 @Stateless
-public class TransactionController {
+public class ReportsController {
 
     @PersistenceContext(unitName = Utility.PERSISTENCE_CONTEXT_UNIT_NAME)
     private EntityManager em;
-
-    private static final Logger LOGGER = Logger.getLogger(TransactionController.class.getName());
+    
+    private static final Logger LOGGER = Logger.getLogger(ReportsController.class.getName());
 
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    public void merge(Object object) {
-        em.merge(object);
-    }
 
-    public List<Journal> getAllJournals() {
+    public List<Journal> getAllTransactions(){
         String name = "Journal.findAll";
         List<Journal> journals = new ArrayList<>();
         try {
-            journals = em.createNamedQuery(name).setMaxResults(10000).getResultList();
+            journals = em.createNamedQuery(name).getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "exception in getAllJournals :{0}", e.getMessage());
+            LOGGER.log(Level.SEVERE, "exception in getAllTransactions ", e);
         }
         return journals;
     }
-
-    public List<Operations> getOperations() {
-        String name = "Operations.findAll";
-        List<Operations> operations = new ArrayList<>();
-        try {
-            operations = em.createNamedQuery(name).getResultList();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "exception in getOperations :{0}", e.getMessage());
-        }
-        return operations;
-    }
+    
 }

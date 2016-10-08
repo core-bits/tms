@@ -25,6 +25,13 @@
                             <f:selectItem itemValue="DR" itemLabel="DEBIT"/>
                             <f:selectItem itemValue="CR" itemLabel="CREDIT"/>
                         </p:selectOneMenu>
+                        
+                        <h:outputLabel value="Operation" for="operate" style="font-weight:bold" />
+                        <p:selectOneMenu id="operate" value="#{transaction.operation}" title="Operations" >
+                            <f:selectItems value="#{transaction.operations}" var="operate" 
+                                           itemValue="#{operate.operationName}" 
+                                           itemLabel="#{operate.operationName}"/>
+                        </p:selectOneMenu>
 
                         <h:outputLabel value="Transaction Amount" for="newTypeName" style="font-weight:bold" />
                         <p:inputNumber id="newTypeName" value="#{transaction.amount}" 
@@ -73,6 +80,11 @@
                         <p:column headerText="Debit" sortBy="#{acct.debit}"  sortable="true"
                                   filterBy="#{acct.debit}" filterMatchMode="contains">
                             <h:outputText style="float: right" value="#{acct.debit}" />
+                        </p:column>
+                        
+                        <p:column headerText="Balance" sortBy="#{acct.balance}"  sortable="true"
+                                  filterBy="#{acct.balance}" filterMatchMode="contains">
+                            <h:outputText style="float: right" value="#{acct.balance}" />
                         </p:column>
                         
                         <p:column headerText="Narration" sortBy="#{acct.note}"  sortable="true"

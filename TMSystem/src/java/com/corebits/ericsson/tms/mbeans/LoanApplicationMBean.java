@@ -151,7 +151,8 @@ public class LoanApplicationMBean extends AbstractMBean<LoanApplication> impleme
     }
     
     private String generateTransactionId(){
-        return UUID.randomUUID().toString().substring(0, 20);
+        StaffMember member = getMemberId();
+        return member + String.valueOf(System.currentTimeMillis());
     }
     
     private boolean isRunningLoan(String memberId, Integer loanType){

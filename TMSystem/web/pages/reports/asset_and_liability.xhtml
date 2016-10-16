@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Asset and Liability</ui:define>
+
+    <ui:define name="content">    
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" showSummary="true"/> 
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card">                        
+                        <p:dataTable var="accountTypeList" value="#{reports.balanceSheet}">
+                            <f:facet name="header">
+                                <h:outputText style="font-size: 140%;" value="Balance Sheet"/>                                
+                            </f:facet>
+
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column style="text-align: left; font-size: 110%; font-weight: bold;" headerText="Account Name" />
+                                    <p:column style="text-align: left; font-size: 110%; font-weight: bold;" headerText="DR" />
+                                    <p:column style="text-align: left; font-size: 110%; font-weight: bold;" headerText="CR" />
+                                </p:row>
+                            </p:columnGroup>
+
+                            <p:subTable var="accountList" value="#{accountTypeList.account}">
+                                <f:facet name="header">
+                                    <h:outputText style="font-size: 120%;" value="#{accountTypeList.category.name}" />
+                                </f:facet>
+                                <p:column>
+                                    <h:outputText value="#{accountList.account.accountName}" />
+                                </p:column>
+                                 <p:column>                                     
+                                    <h:outputText style="float: right" value="#{accountList.totalDebit}">
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText style="float: right" value="#{accountList.totalCredit}" >
+                                        <f:convertNumber type="currency"  currencySymbol=""/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column footerText="Total: " style="text-align:right"/>
+                                        <p:column footerText=" " />
+                                        <p:column  style="text-align:right; font-weight: bold;" footerText="#{accountTypeList.total}"/>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:subTable>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
